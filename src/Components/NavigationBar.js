@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import Search from './Search'
 
 function NavigationBar() {
 	return (
@@ -28,6 +29,7 @@ function NavigationBar() {
 				>
 					Nib-Nav
 				</Typography>
+                <Search/>
 				<Button color='inherit'>Login</Button>
 			</Toolbar>
 		</AppBar>
