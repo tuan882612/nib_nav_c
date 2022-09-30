@@ -1,10 +1,13 @@
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
+import {
+	Link,
+	IconButton,
+	Button,
+	Typography,
+	Toolbar,
+	AppBar,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Search from './Search'
+import Search from './Search';
 
 function NavigationBar() {
 	return (
@@ -29,8 +32,10 @@ function NavigationBar() {
 				>
 					Nib-Nav
 				</Typography>
-                <Search/>
-				<Button color='inherit'>Login</Button>
+				<Search />
+				<Link href='/login' underline='none'>
+					<Button color='inherit'>Login</Button>
+				</Link>
 			</Toolbar>
 		</AppBar>
 	);
