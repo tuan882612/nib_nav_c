@@ -1,15 +1,13 @@
-import {
-	IconButton,
-	Button,
-	Typography,
-	Toolbar,
-	AppBar,
-} from '@mui/material';
+import {useState} from 'react'
+import { IconButton, Button, Typography, Toolbar, AppBar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from 'react-router-dom';
 import Search from './Search';
+import Popup from './Popup.js'
+import Login from './Login.js'
 
 function NavigationBar() {
+	const [openPopup, setOpenPopup] = useState(false);
+
 	return (
 		<AppBar
 			position='static'
@@ -33,9 +31,20 @@ function NavigationBar() {
 					Nib-Nav
 				</Typography>
 				<Search />
-				<Link to='/login' style={{textDecoration:'none', color: 'white'}}>
-					<Button color='inherit'>Login</Button>
-				</Link>
+				<Button
+					color='inherit'
+					onClick={() => setOpenPopup(true)}
+				>
+					Login
+				</Button>
+				<Popup
+					title={'Sign-In'}
+					openPopup={openPopup}
+					setOpenPopup={setOpenPopup}
+					color='inherit'
+				>
+					{/* <Login></Login> */}
+				</Popup>
 			</Toolbar>
 		</AppBar>
 	);
