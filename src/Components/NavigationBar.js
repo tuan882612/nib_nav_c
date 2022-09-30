@@ -1,5 +1,4 @@
 import {
-	Link,
 	IconButton,
 	Button,
 	Typography,
@@ -7,6 +6,7 @@ import {
 	AppBar,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Link } from 'react-router-dom';
 import Search from './Search';
 
 function NavigationBar() {
@@ -33,7 +33,7 @@ function NavigationBar() {
 					Nib-Nav
 				</Typography>
 				<Search />
-				<Link href='/login' underline='none'>
+				<Link to='/login' style={{textDecoration:'none', color: 'white'}}>
 					<Button color='inherit'>Login</Button>
 				</Link>
 			</Toolbar>

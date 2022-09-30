@@ -1,3 +1,4 @@
+import '../Assets/Styles/Login.css'
 
 function Login() {
     return(
@@ -6,8 +7,5 @@ function Login() {
         </div>
     )
 }
-
-
-
 
 export default Login;

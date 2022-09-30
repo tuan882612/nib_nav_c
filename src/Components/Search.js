@@ -40,13 +40,6 @@ function Search() {
 					}
 				}}
 			>
-				<IconButton
-					type='button'
-					sx={{ p: '10px', color: 'white' }}
-					aria-label='search'
-				>
-					<SearchIcon />
-				</IconButton>
 			</StyledInputBase>
 			<IconButton
 				type='button'
