@@ -43,7 +43,7 @@ function NavigationBar() {
 					setOpenPopup={setOpenPopup}
 					color='inherit'
 				>
-					{/* <Login></Login> */}
+					<Login/>
 				</Popup>
 			</Toolbar>
 		</AppBar>
