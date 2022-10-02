@@ -2,7 +2,7 @@ import '../Assets/Styles/Home.css';
 import { Box } from '@mui/material';
 import Map from '../Components/Map';
 
-function Home() {
+function PostLogin() {
 	return (
 		<div className='body'>
 			<Box sx={{ flexGrow: 1 }}>
@@ -14,4 +14,4 @@ function Home() {
 	);
 }
 
-export default Home;
+export default PostLogin;

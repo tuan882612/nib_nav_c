@@ -25,6 +25,13 @@ function Search() {
 
 	return (
 		<StyledBox>
+			<IconButton
+				type='button'
+				sx={{ p: '10px', color: 'white' }}
+				aria-label='search'
+			>
+				<SearchIcon />
+			</IconButton>
 			<StyledInputBase
 				placeholder='Search...'
 				inputProps={{ 'aria-label': 'search', maxLength: 100 }}
@@ -34,20 +41,12 @@ function Search() {
 				}}
 				onKeyPress={(e) => {
 					if (e.key === 'Enter') {
-                        //Change to take search and redirect
-                        setClicked(e.target.value)
+						//Change to take search and redirect
+						setClicked(e.target.value);
 						console.log('meow');
 					}
 				}}
-			>
-			</StyledInputBase>
-			<IconButton
-				type='button'
-				sx={{ p: '10px', color: 'white' }}
-				aria-label='search'
-			>
-				<SearchIcon />
-			</IconButton>
+			></StyledInputBase>
 		</StyledBox>
 	);
 }

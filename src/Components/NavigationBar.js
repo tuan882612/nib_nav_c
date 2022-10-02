@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import { IconButton, Button, Typography, Toolbar, AppBar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Search from './Search';
 import Popup from './Popup.js'
 import Login from './Login.js'
 
@@ -30,7 +29,6 @@ function NavigationBar() {
 				>
 					Nib-Nav
 				</Typography>
-				<Search />
 				<Button
 					color='inherit'
 					onClick={() => setOpenPopup(true)}

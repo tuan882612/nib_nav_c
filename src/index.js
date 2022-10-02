@@ -5,7 +5,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import NavigationBar from './Components/NavigationBar';
 
-import Home from './Pages/Home';
+import PreLogin from './Pages/PreLogin';
+import PostLogin from './Pages/PostLogin'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -15,7 +16,7 @@ root.render(
 		<Routes>
 			<Route
 				path='/'
-				element={<Home />}
+				element={<PreLogin />}
 			/>
 		</Routes>
 	</Router>

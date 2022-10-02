@@ -1,8 +1,8 @@
 .body {
-  display: flex; 
+  display: flex;
   min-height: 100vh;
   background-color: #18191c;
-  color: rgb(255, 255, 255);  
+  color: rgb(255, 255, 255);
   font-size: calc(10px + 2vmin);
 }
 
@@ -10,5 +10,4 @@
   display: flex;
   justify-content: center;
   margin: 50px;
-  background-color: white;
 }
