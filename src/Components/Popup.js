@@ -9,7 +9,6 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 
 function Popup(props) {
-	
 	const { title, children, openPopup, setOpenPopup } = props;
 
 	return (
