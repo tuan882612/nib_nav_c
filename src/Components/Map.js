@@ -40,11 +40,12 @@ const StyledRestaurant = styled(Box)(() => ({
 }));
 
 function Map() {
-	const [results, setResults] = useState([]);
+	// const [results, setResults] = useState([]);
 	const [latitude, setLatitude] = useState(32.731);
 	const [longitude, setLongitude] = useState(-97.115);
-	const originRef = useRef();
-	const destinationRef = useRef();
+	const [originLocation, setOriginLocation] = useState();
+	const originRef = useRef(null);
+	const destinationRef = useRef(null);
 
 	const center = useMemo(
 		() => ({ lat: latitude, lng: longitude }),
@@ -52,10 +53,6 @@ function Map() {
 	);
 
 	const libraries = ['places'];
-
-	function search() {
-		
-	}
 
 	const { isLoaded } = useLoadScript({
 		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -81,9 +78,26 @@ function Map() {
 								maxLength: 50,
 								placeholder: 'Current Location',
 							}}
-							onKeyPress={(event) => {
+							onKeyPress={async (event) => {
 								if (event.key === 'Enter') {
-									search();
+									let address = {
+										address: event.target.value,
+									};
+									setOriginLocation(address);
+									console.log(originLocation);
+									try {
+										getGeocode(originLocation).then(
+											(results) => {
+												const { lat, lng } = getLatLng(
+													results[0]
+												);
+												setLatitude(lat);
+												setLongitude(lng);
+											}
+										);
+									} catch (error) {
+										console.log('Error: ', error);
+									}
 								}
 							}}
 						></StyledInputBase>
