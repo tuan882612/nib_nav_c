@@ -31,7 +31,6 @@ const StyledRestaurant = styled(Box)(() => ({
 	height: '30rem',
 	color: 'black',
 	backgroundColor: 'white',
-
 	mb: 2,
 	display: 'flex',
 	flexDirection: 'column',
@@ -40,7 +39,8 @@ const StyledRestaurant = styled(Box)(() => ({
 }));
 
 function Map() {
-	// const [results, setResults] = useState([]);
+	const [map, setMap] = useState(null);
+	const [results, setResults] = useState([]);
 	const [latitude, setLatitude] = useState(32.731);
 	const [longitude, setLongitude] = useState(-97.115);
 	const [originLocation, setOriginLocation] = useState('');
@@ -52,8 +52,7 @@ function Map() {
 		[latitude, longitude]
 	);
 
-	const libraries = ['places'];
-
+	const libraries = ['places', 'directions'];
 	const { isLoaded } = useLoadScript({
 		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
 		libraries: libraries,
@@ -66,6 +65,25 @@ function Map() {
 					const { lat, lng } = getLatLng(results[0]);
 					setLatitude(lat);
 					setLongitude(lng);
+
+					let service = new window.google.maps.places.PlacesService(
+						map
+					);
+
+					let request = {
+						location: { lat, lng },
+						radius: 1500,
+						type: ['meal_delivery'],
+					};
+
+					service.nearbySearch(request, (results, status) => {
+						if (
+							status == window.google.maps.places.PlacesServiceStatus.OK
+						) {
+							setResults(results);
+							console.log(results)
+						}
+					});
 				});
 			} catch (error) {
 				console.log('Error: ', error);
@@ -98,13 +116,15 @@ function Map() {
 										address: event.target.value,
 									};
 									setOriginLocation(address);
-									console.log(originLocation);
 								}
 							}}
 						></StyledInputBase>
 					</Autocomplete>
 				</StyledBox>
 				<GoogleMap
+					onLoad={(map) => {
+						setMap(map);
+					}}
 					zoom={14}
 					center={center}
 					mapContainerClassName='map-container'
@@ -136,8 +156,8 @@ function Map() {
 					</Autocomplete>
 				</StyledBox>
 				<StyledRestaurant>
-					{Array.from(Array(25)).map((_, index) => (
-						<Button>index</Button>
+					{results.map((restaurant) => (
+						<Button>{restaurant.name}</Button>
 					))}
 				</StyledRestaurant>
 			</Box>
