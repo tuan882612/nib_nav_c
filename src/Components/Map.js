@@ -1,5 +1,5 @@
 import '../Assets/Styles/Map.css';
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import {
 	GoogleMap,
 	useLoadScript,
@@ -43,7 +43,7 @@ function Map() {
 	// const [results, setResults] = useState([]);
 	const [latitude, setLatitude] = useState(32.731);
 	const [longitude, setLongitude] = useState(-97.115);
-	const [originLocation, setOriginLocation] = useState();
+	const [originLocation, setOriginLocation] = useState('');
 	const originRef = useRef(null);
 	const destinationRef = useRef(null);
 
@@ -58,6 +58,20 @@ function Map() {
 		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
 		libraries: libraries,
 	});
+
+	useEffect(() => {
+		if (originLocation != '') {
+			try {
+				getGeocode(originLocation).then((results) => {
+					const { lat, lng } = getLatLng(results[0]);
+					setLatitude(lat);
+					setLongitude(lng);
+				});
+			} catch (error) {
+				console.log('Error: ', error);
+			}
+		}
+	}, [originLocation]);
 
 	if (!isLoaded) return <div>Load...</div>;
 
@@ -85,19 +99,6 @@ function Map() {
 									};
 									setOriginLocation(address);
 									console.log(originLocation);
-									try {
-										getGeocode(originLocation).then(
-											(results) => {
-												const { lat, lng } = getLatLng(
-													results[0]
-												);
-												setLatitude(lat);
-												setLongitude(lng);
-											}
-										);
-									} catch (error) {
-										console.log('Error: ', error);
-									}
 								}
 							}}
 						></StyledInputBase>
