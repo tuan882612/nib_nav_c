@@ -10,6 +10,7 @@ import { getGeocode, getLatLng } from 'use-places-autocomplete';
 import { Box, InputBase, Icon, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
+import axios from 'axios';
 
 const StyledBox = styled(Box)(() => ({
 	border: '2px',
@@ -38,12 +39,15 @@ const StyledRestaurant = styled(Box)(() => ({
 	overflowY: 'scroll',
 }));
 
+const libraries = ['places', 'directions'];
+
 function Map() {
 	const [map, setMap] = useState(null);
 	const [results, setResults] = useState([]);
 	const [latitude, setLatitude] = useState(32.731);
 	const [longitude, setLongitude] = useState(-97.115);
 	const [originLocation, setOriginLocation] = useState('');
+	const [destinationLocation, setDestinationLocation] = useState('');
 	const originRef = useRef(null);
 	const destinationRef = useRef(null);
 
@@ -52,14 +56,30 @@ function Map() {
 		[latitude, longitude]
 	);
 
-	const libraries = ['places', 'directions'];
 	const { isLoaded } = useLoadScript({
 		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
 		libraries: libraries,
 	});
 
 	useEffect(() => {
-		if (originLocation != '') {
+		if (destinationLocation !== '') {
+			const data = {
+				aud: 'doordash',
+				iss: process.env.REACT_APP_DOORDASH_DEVELOPER_ID,
+				kid: process.env.REACT_APP_DOORDASH_KEY_ID,
+				exp: Math.floor(Date.now() / 1000 + 60),
+				iat: Math.floor(Date.now() / 1000),
+			};
+
+			const headers = {
+				algorithm: 'HS256',
+				header: { 'dd-ver': 'DD-JWT-V1' },
+			};
+		}
+	}, [destinationLocation]);
+
+	useEffect(() => {
+		if (originLocation !== '') {
 			try {
 				getGeocode(originLocation).then((results) => {
 					const { lat, lng } = getLatLng(results[0]);
@@ -72,16 +92,17 @@ function Map() {
 
 					let request = {
 						location: { lat, lng },
-						radius: 1500,
+						radius: 2000,
 						type: ['meal_delivery'],
 					};
 
 					service.nearbySearch(request, (results, status) => {
 						if (
-							status == window.google.maps.places.PlacesServiceStatus.OK
+							status ===
+							window.google.maps.places.PlacesServiceStatus.OK
 						) {
 							setResults(results);
-							console.log(results)
+							console.log(results);
 						}
 					});
 				});
@@ -89,7 +110,7 @@ function Map() {
 				console.log('Error: ', error);
 			}
 		}
-	}, [originLocation]);
+	}, [originLocation, map]);
 
 	if (!isLoaded) return <div>Load...</div>;
 
@@ -129,12 +150,16 @@ function Map() {
 					center={center}
 					mapContainerClassName='map-container'
 					options={{
-						zoomControl: false,
 						streetViewControl: false,
 						mapTypeControl: false,
 					}}
 				>
 					<MarkerF position={center} />
+					{results.map((restaurant) => (
+						<MarkerF
+							position={restaurant.geometry.location}
+						></MarkerF>
+					))}
 				</GoogleMap>
 			</Box>
 			<Box sx={{ marginLeft: '5rem' }}>
@@ -152,12 +177,23 @@ function Map() {
 								maxLength: 50,
 								placeholder: 'Destination Location',
 							}}
+							onKeyPress={(event) => {
+								if (event.key === 'Enter') {
+									setDestinationLocation(event.target.value);
+								}
+							}}
 						></StyledInputBase>
 					</Autocomplete>
 				</StyledBox>
 				<StyledRestaurant>
 					{results.map((restaurant) => (
-						<Button>{restaurant.name}</Button>
+						<Button
+							onClick={() => {
+								setDestinationLocation(restaurant.vicinity);
+							}}
+						>
+							{restaurant.name}
+						</Button>
 					))}
 				</StyledRestaurant>
 			</Box>
