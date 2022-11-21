@@ -61,21 +61,27 @@ function Feedback() {
 				}}
 				className='inputs'
 			>
-				Name:{' '}
-				<input
-					type='text'
-					ref={nameRef}
-				></input>
-				Email:{' '}
-				<input
-					type='email'
-					ref={emailRef}
-				></input>
-				Comment:{' '}
-				<input
-					type='text'
-					ref={commentRef}
-				></input>
+				<div className='name'>
+					Name:{' '}
+					<input
+						type='text'
+						ref={nameRef}
+					></input>
+				</div>
+				<div className='email'>
+					Email:{' '}
+					<input
+						type='email'
+						ref={emailRef}
+					></input>
+				</div>
+				<div className='comment'>
+					Comment:{' '}
+					<textarea
+						type='text'
+						ref={commentRef}
+					></textarea>
+				</div>
 				<button type='submit'>Submit</button>
 			</form>
 		</div>
