@@ -45,7 +45,8 @@ function Login() {
 			password:values.password
 		}).then((response) => {
 			if (response.status === 200) {
-				console.log(response.data, );
+				sessionStorage.setItem("Id",values.username)
+				console.log(sessionStorage.getItem("Id"),response.data);
 			} else {
 				console.log("Invalid input")
 			}
