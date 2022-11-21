@@ -21,7 +21,7 @@ root.render(
 				element={<Home />}
 			/>
 			<Route
-				path='/map'
+				path='/search'
 				element={<Search />}
 			/>
 			<Route

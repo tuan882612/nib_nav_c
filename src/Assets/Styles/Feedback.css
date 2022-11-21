@@ -6,12 +6,12 @@
 }
 
 .inputs {
-    margin-top: 50px;
     display: grid;
     align-items: center;
     justify-content: center;
     grid-gap:  20px;
     font-family: Arial, Helvetica, sans-serif;
+    padding: 50px
 }
 
 .name {

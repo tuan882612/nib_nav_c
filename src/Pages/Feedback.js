@@ -51,7 +51,6 @@ function Feedback() {
 
 	return (
 		<div className='main-container'>
-			Feedback
 			<form
 				onSubmit={() => {
 					setName(nameRef.current.value);

@@ -54,7 +54,7 @@ function NavigationBar() {
 						component='div'
 						sx={{ cursor: 'pointer' }}
 						onClick={() => {
-							navigate('/map');
+							navigate('/search');
 						}}
 					>
 						Search
