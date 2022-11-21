@@ -3,6 +3,19 @@ import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { Pause } from '@mui/icons-material';
 import SelectInput from '@mui/material/Select/SelectInput';
+import {
+	Button,
+	FormControl,
+	OutlinedInput,
+	styled,
+	TextField,
+} from '@mui/material';
+import { maxHeight, minHeight } from '@mui/system';
+
+const StyledInput = styled(OutlinedInput)(() => ({
+	backgroundColor: 'white',
+	maxHeight: '30px',
+}));
 
 const createURL = 'http://localhost:8080/feedback/create';
 const fetchURL = 'http://localhost:8080/feedback/get/';
@@ -63,38 +76,34 @@ function Feedback() {
 
 	return (
 		<div className='main-container'>
-			<form
-				onSubmit={() => {
-					// setName(nameRef.current.value);
-					// setEmail(emailRef.current.value);
-					// setComment(commentRef.current.value);
-					sendFeedback();
-					return false;
-				}}
-				className='inputs'
-			>
-				<div className='name'>
-					Name:{' '}
-					<input
-						type='text'
-						ref={nameRef}
-					></input>
-				</div>
-				<div className='email'>
-					Email:{' '}
-					<input
-						type='email'
-						ref={emailRef}
-					></input>
-				</div>
-				<div className='comment'>
-					Comment:{' '}
-					<textarea
-						type='text'
-						ref={commentRef}
-					></textarea>
-				</div>
-				<button type='submit'>Submit</button>
+			<form className='inputs'>
+				<FormControl>
+					Name:
+					<StyledInput type={'name'} />
+				</FormControl>
+				<FormControl>
+					Email:
+					<StyledInput type={'email'} />
+				</FormControl>
+				<FormControl>
+					Comment:
+					<TextField
+						sx={{
+							bgcolor: 'white',
+							resize: 'none',
+							borderRadius: 1,
+						}}
+						type={'comment'}
+						multiline
+						rows={3}
+					/>
+				</FormControl>
+				<Button
+					sx={{ bgcolor: '#788C7C', color: 'white' }}
+					type='submit'
+				>
+					Submit
+				</Button>
 			</form>
 		</div>
 	);

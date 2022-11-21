@@ -1,0 +1,13 @@
+#profile-header{
+    font-size: 3rem;
+    font-weight: 400;
+    text-align: center;
+    padding: 2rem 0rem;
+    letter-spacing: 0.3rem;
+}
+.profile-contents{
+    margin:auto 15rem;
+    display: grid;
+    text-align: center;
+    line-height: 4rem;
+}

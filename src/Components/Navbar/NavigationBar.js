@@ -3,29 +3,51 @@ import {
 	AppBar,
 	Box, Button, IconButton, Toolbar, Typography
 } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Login from '../-Login.js';
-import Popup from '../Popup.js';
+
+import CheckSession from '../../utils/UserUtilities';
 
 function NavigationBar() {
 	const [openPopup, setOpenPopup] = useState(false);
 	const navigate = useNavigate();
 
-	const loginProps = () => {
-		var loggedIn = sessionStorage.getItem("id")
-		return {
-			route: (sessionStorage.getItem("id"))?'/home':'/login',
-			dis: (sessionStorage.getItem("id"))?'signout':'login',
-		}
+	const logButton = () => {
+		return (
+			(sessionStorage.getItem('login') === 'true')?
+				<Button
+					sx={{"&:hover":{bgcolor: '#5b6b5e'}}}
+					color='inherit'
+					onClick={() => {
+						sessionStorage.setItem("login", 'false')
+						sessionStorage.setItem("id", "")
+						navigate('/login')
+					}}
+				>
+					Sign Out
+				</Button>:
+				<Button
+					sx={{"&:hover":{bgcolor: '#5b6b5e'}}}
+					color='inherit'
+					onClick={() => navigate('/login')}
+				>
+					Login
+				</Button>
+		)
 	}
+	
 
 	return (
 		<AppBar
 			position='static'
 			sx={{ bgcolor: '#788c7c' }}
 		>
-			<Toolbar sx={{ justifyContent: 'space-between', display: 'flex' }}>
+			<Toolbar 
+				sx={{
+					justifyContent: 'space-between', 
+					display: 'flex' 
+				}}
+			>
 				{/* <IconButton
 					size='large'
 					edge='start'
@@ -37,7 +59,7 @@ function NavigationBar() {
 				</IconButton> */}
 				<Box
 					sx={{
-						flexGrow: 0.2,
+						flexGrow: 0.1,
 						display: 'inline-flex',
 						justifyContent: 'space-between',
 					}}
@@ -46,9 +68,7 @@ function NavigationBar() {
 						variant='h6'
 						component='div'
 						sx={{ cursor: 'pointer' }}
-						onClick={() => {
-							navigate('/');
-						}}
+						onClick={() => navigate('/')}
 					>
 						Home
 					</Typography>
@@ -56,9 +76,7 @@ function NavigationBar() {
 						variant='h6'
 						component='div'
 						sx={{ cursor: 'pointer' }}
-						onClick={() => {
-							navigate('/search');
-						}}
+						onClick={() => navigate('/search')}
 					>
 						Search
 					</Typography>
@@ -66,9 +84,7 @@ function NavigationBar() {
 						variant='h6'
 						component='div'
 						sx={{ cursor: 'pointer' }}
-						onClick={() => {
-							navigate('/feedback');
-						}}
+						onClick={() => navigate('/feedback')}
 					>
 						Feedback
 					</Typography>
@@ -76,22 +92,15 @@ function NavigationBar() {
 						variant='h6'
 						component='div'
 						sx={{ cursor: 'pointer' }}
-						onClick={() => {
-							navigate('/profile');
-						}}
+						onClick={() => navigate('/profile')}
 					>
 						Profile
 					</Typography>
 				</Box>
-				<Button
-					sx={{"&:hover":{bgcolor: '#5b6b5e'}}}
-					color='inherit'
-					onClick={() => 
-						(sessionStorage.getItem("id"))?navigate('/'):navigate('/login')
-					}
-				>
-					{(sessionStorage.getItem("id"))?'signout':'login'}
-				</Button>
+				<Box>
+					{logButton()}
+				</Box>
+				
 				{/* <Popup
 					title={'Login'}
 					openPopup={openPopup}
