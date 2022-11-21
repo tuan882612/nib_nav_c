@@ -12,6 +12,14 @@ import Search from './Pages/Search';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
+function foo(){
+    console.log('function is being called')
+}
+
+setInterval(function(){
+    foo()
+}, 30000)
+
 root.render(
 	<Router>
 		<NavigationBar />
