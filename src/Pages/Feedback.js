@@ -4,7 +4,8 @@ import axios from 'axios';
 import { Pause } from '@mui/icons-material';
 import SelectInput from '@mui/material/Select/SelectInput';
 
-const baseURL = 'tuan';
+const createURL = 'http://localhost:8080/feedback/create';
+const fetchURL = 'http://localhost:8080/feedback/get/';
 const regex = /^[^s@]+@[^s@]+.[^s@]+$/;
 
 function Feedback() {
@@ -16,17 +17,28 @@ function Feedback() {
 	const commentRef = useRef(null);
 
 	const sendFeedback = () => {
-		if (name !== '' && email !== '' && comment !== '') {
-			const feedback = {
-				name: name,
-				email: email,
-				comment: comment,
-			};
+		const feedback = {
+			name: nameRef.current.value,
+			email: emailRef.current.value,
+			comment: commentRef.current.value,
+		};
 
-			// axios.post(baseURL, feedback).then((response) => {
-			// 	console.log(response);
-			// });
-		}
+		axios.post(createURL, feedback).then((response) => {
+			console.log(response);
+		});
+		// if (name !== '' && email !== '' && comment !== '') {
+		// 	const feedback = {
+		// 		name: nameRef.current.value,
+		// 		email: emailRef.current.value,
+		// 		comment: commentRef.current.value,
+		// 	};
+
+		// 	console.log(feedback);
+
+		// 	axios.post(createURL, feedback).then((response) => {
+		// 		console.log(response);
+		// 	});
+		// }
 	};
 
 	// useEffect(() => {
@@ -53,10 +65,11 @@ function Feedback() {
 		<div className='main-container'>
 			<form
 				onSubmit={() => {
-					setName(nameRef.current.value);
-					setEmail(emailRef.current.value);
-					setComment(commentRef.current.value);
+					// setName(nameRef.current.value);
+					// setEmail(emailRef.current.value);
+					// setComment(commentRef.current.value);
 					sendFeedback();
+					return false;
 				}}
 				className='inputs'
 			>

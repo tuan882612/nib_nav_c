@@ -25,7 +25,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 	color: 'white',
 	width: '22rem',
 	'& .MuiInputBase-input': {
-		padding: theme.spacing(1, 1, 1, 0),
+		margin: theme.spacing('0.5rem', '0.1rem'),
+		// padding: theme.spacing(1, 1, 1, 0),
 	},
 }));
 
@@ -165,7 +166,7 @@ function Search() {
 		}
 	}, [originLocation, map]);
 
-	if (!isLoaded) return <div>Load...</div>;
+	if (!isLoaded) return <div className='body'></div>;
 
 	return (
 		<div className='body'>
