@@ -15,7 +15,7 @@ import * as jose from 'jose';
 import { Buffer } from 'buffer';
 
 const StyledBox = styled(Box)(() => ({
-	border: '2px',
+	border: '0.5px',
 	borderStyle: 'solid',
 	borderColor: 'white',
 	display: 'flex',
@@ -50,9 +50,9 @@ function Search() {
 	const [latitude, setLatitude] = useState(32.731);
 	const [longitude, setLongitude] = useState(-97.115);
 	const [originLocation, setOriginLocation] = useState('');
-	const [destinationLocation, setDestinationLocation] = useState('');
+	const [recipe, setRecipe] = useState('');
 	const originRef = useRef(null);
-	const destinationRef = useRef(null);
+	const recipeRef = useRef(null);
 
 	const center = useMemo(
 		() => ({ lat: latitude, lng: longitude }),
@@ -65,72 +65,82 @@ function Search() {
 	});
 
 	useEffect(() => {
-		// async function signToken() {
-		//might need to move token to avoid recalling it
-		// const data = {
-		// 	aud: 'doordash',
-		// 	iss: process.env.REACT_APP_DOORDASH_DEVELOPER_ID,
-		// 	kid: process.env.REACT_APP_DOORDASH_KEY_ID,
-		// 	exp: Math.floor(Date.now() / 1000 + 60),
-		// 	iat: Math.floor(Date.now() / 1000),
-		// };
+		async function signToken() {
+			// // might need to move token to avoid recalling it
+			// const data = {
+			// 	aud: 'doordash',
+			// 	iss: process.env.REACT_APP_DOORDASH_DEVELOPER_ID,
+			// 	kid: process.env.REACT_APP_DOORDASH_KEY_ID,
+			// 	exp: Math.floor(Date.now() / 1000 + 60),
+			// 	iat: Math.floor(Date.now() / 1000),
+			// };
 
-		// const headers = {
-		// 	alg: 'HS256',
-		// 	header: { 'dd-ver': 'DD-JWT-V1' },
-		// };
+			// const headers = {
+			// 	alg: 'HS256',
+			// 	header: { 'dd-ver': 'DD-JWT-V1' },
+			// };
 
-		// const token = await new jose.SignJWT(data)
-		// 	.setProtectedHeader(headers)
-		// 	.setIssuedAt()
-		// 	.setIssuer(process.env.REACT_APP_DOORDASH_DEVELOPER_ID)
-		// 	.setAudience('doordash')
-		// 	.sign(
-		// 		Buffer.from(
-		// 			process.env.REACT_APP_DOORDASH_SIGNING_SECRET,
-		// 			'base64'
-		// 		)
-		// 	);
+			// const token = await new jose.SignJWT(data)
+			// 	.setProtectedHeader(headers)
+			// 	.setIssuedAt()
+			// 	.setIssuer(process.env.REACT_APP_DOORDASH_DEVELOPER_ID)
+			// 	.setAudience('doordash')
+			// 	.sign(
+			// 		Buffer.from(
+			// 			process.env.REACT_APP_DOORDASH_SIGNING_SECRET,
+			// 			'base64'
+			// 		)
+			// 	);
 
-		// console.log(token);
+			// console.log(token);
 
-		// const body = JSON.stringify({
-		// 	external_delivery_id: 'D-12345',
-		// 	pickup_address:
-		// 		'901 Market Street 6th Floor San Francisco, CA 94103',
-		// 	pickup_business_name: 'Wells Fargo SF Downtown',
-		// 	pickup_phone_number: '+16505555555',
-		// 	pickup_instructions: 'Enter gate code 1234 on the callbox.',
-		// 	dropoff_address:
-		// 		'901 Market Street 6th Floor San Francisco, CA 94103',
-		// 	dropoff_business_name: 'Wells Fargo SF Downtown',
-		// 	dropoff_phone_number: '+16505555555',
-		// 	dropoff_instructions: 'Enter gate code 1234 on the callbox.',
-		// 	order_value: 1999,
-		// });
+			// const body = JSON.stringify({
+			// 	external_delivery_id: 'D-12345',
+			// 	pickup_address:
+			// 		'901 Market Street 6th Floor San Francisco, CA 94103',
+			// 	pickup_business_name: 'Wells Fargo SF Downtown',
+			// 	pickup_phone_number: '+16505555555',
+			// 	pickup_instructions: 'Enter gate code 1234 on the callbox.',
+			// 	dropoff_address:
+			// 		'901 Market Street 6th Floor San Francisco, CA 94103',
+			// 	dropoff_business_name: 'Wells Fargo SF Downtown',
+			// 	dropoff_phone_number: '+16505555555',
+			// 	dropoff_instructions: 'Enter gate code 1234 on the callbox.',
+			// 	order_value: 1999,
+			// });
 
-		// axios
-		// 	.post(
-		// 		'https://openapi.doordash.com/drive/v2/quotes',
-		// 		body,
-		// 		{
-		// 			headers: {
-		// 				Authorization: 'Bearer ' + token,
-		// 				'Content-Type': 'application/json',
-		// 			},
-		// 		}
-		// 	)
-		// 	.then(function (response) {
-		// 		console.log(response.data);
-		// 	})
-		// 	.catch(function (error) {
-		// 		console.log(error);
-		// 	});
-		// }
-		if (destinationLocation !== '') {
-			// signToken();
+			// axios
+			// 	.post(
+			// 		'https://openapi.doordash.com/drive/v2/quotes',
+			// 		body,
+			// 		{
+			// 			headers: {
+			// 				Authorization: 'Bearer ' + token,
+			// 				'Content-Type': 'application/json',
+			// 			},
+			// 		}
+			// 	)
+			// 	.then(function (response) {
+			// 		console.log(response.data);
+			// 	})
+			// 	.catch(function (error) {
+			// 		console.log(error);
+			// 	});
+			// axios
+			// 	.get(
+			// 		`https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&query=pasta&maxFat=25&number=2`
+			// 	)
+			// 	.then((response) => {
+			// 		setResults(response.data.results);
+			// 		console.log(response);
+			// 	});
+
+			// console.log(process.env.REACT_APP_SPOONACULAR_API_KEY);
 		}
-	}, [destinationLocation]);
+		if (recipe !== '') {
+			signToken();
+		}
+	}, [recipe]);
 
 	useEffect(() => {
 		if (originLocation !== '') {
@@ -140,25 +150,25 @@ function Search() {
 					setLatitude(lat);
 					setLongitude(lng);
 
-					let service = new window.google.maps.places.PlacesService(
-						map
-					);
+					// let service = new window.google.maps.places.PlacesService(
+					// 	map
+					// );
 
-					let request = {
-						location: { lat, lng },
-						radius: 2000,
-						type: ['meal_delivery'],
-					};
+					// let request = {
+					// 	location: { lat, lng },
+					// 	radius: 2000,
+					// 	type: ['meal_delivery'],
+					// };
 
-					service.nearbySearch(request, (results, status) => {
-						if (
-							status ===
-							window.google.maps.places.PlacesServiceStatus.OK
-						) {
-							setResults(results);
-							console.log(results);
-						}
-					});
+					// service.nearbySearch(request, (results, status) => {
+					// 	if (
+					// 		status ===
+					// 		window.google.maps.places.PlacesServiceStatus.OK
+					// 	) {
+					// 		setResults(results);
+					// 		console.log(results);
+					// 	}
+					// });
 				});
 			} catch (error) {
 				console.log('Error: ', error);
@@ -215,11 +225,6 @@ function Search() {
 							}}
 						>
 							<MarkerF position={center} />
-							{results.map((restaurant) => (
-								<MarkerF
-									position={restaurant.geometry.location}
-								></MarkerF>
-							))}
 						</GoogleMap>
 					</Box>
 					<Box sx={{ marginLeft: '5rem' }}>
@@ -236,33 +241,23 @@ function Search() {
 							</Icon>
 							<Autocomplete>
 								<StyledInputBase
-									ref={destinationRef}
+									ref={recipeRef}
 									inputProps={{
 										maxLength: 50,
-										placeholder: 'Destination Location',
+										placeholder: 'Enter Recipe',
 									}}
 									onKeyPress={(event) => {
 										if (event.key === 'Enter') {
-											setDestinationLocation(
-												event.target.value
-											);
+											setRecipe(event.target.value);
 										}
 									}}
 								></StyledInputBase>
 							</Autocomplete>
 						</StyledBox>
 						<StyledRestaurant>
-							{results.map((restaurant) => (
-								<Button
-									onClick={() => {
-										setDestinationLocation(
-											restaurant.vicinity
-										);
-									}}
-								>
-									{restaurant.name}
-								</Button>
-							))}
+							{results.map((item) => {
+								return <div>{item.title}</div>;
+							})}
 						</StyledRestaurant>
 					</Box>
 				</Box>
