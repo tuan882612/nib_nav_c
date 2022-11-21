@@ -1,19 +1,29 @@
-import {useState} from 'react'
-import { IconButton, Button, Typography, Toolbar, AppBar } from '@mui/material';
+import { useState } from 'react';
+import {
+	IconButton,
+	Button,
+	Typography,
+	Toolbar,
+	AppBar,
+	Box,
+	autocompleteClasses,
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import Popup from './Popup.js'
-import Login from './Login.js'
+import Popup from './Popup.js';
+import Login from './Login.js';
 
 function NavigationBar() {
 	const [openPopup, setOpenPopup] = useState(false);
+	const navigate = useNavigate();
 
 	return (
 		<AppBar
 			position='static'
 			sx={{ bgcolor: 'orange' }}
 		>
-			<Toolbar>
-				<IconButton
+			<Toolbar sx={{ justifyContent: 'space-between', display: 'flex' }}>
+				{/* <IconButton
 					size='large'
 					edge='start'
 					color='inherit'
@@ -21,14 +31,55 @@ function NavigationBar() {
 					sx={{ mr: 2 }}
 				>
 					<MenuIcon />
-				</IconButton>
-				<Typography
-					variant='h6'
-					component='div'
-					sx={{ flexGrow: 1 }}
+				</IconButton> */}
+				<Box
+					sx={{
+						flexGrow: 0.2,
+						display: 'inline-flex',
+						justifyContent: 'space-between',
+					}}
 				>
-					Nib-Nav
-				</Typography>
+					<Typography
+						variant='h6'
+						component='div'
+						sx={{ cursor: 'pointer' }}
+						onClick={() => {
+							navigate('/');
+						}}
+					>
+						Home
+					</Typography>
+					<Typography
+						variant='h6'
+						component='div'
+						sx={{ cursor: 'pointer' }}
+						onClick={() => {
+							navigate('/search');
+						}}
+					>
+						Search
+					</Typography>
+					<Typography
+						variant='h6'
+						component='div'
+						sx={{ cursor: 'pointer' }}
+						onClick={() => {
+							navigate('/feedback');
+						}}
+					>
+						Feedback
+					</Typography>
+					<Typography
+						variant='h6'
+						component='div'
+						sx={{ cursor: 'pointer' }}
+						onClick={() => {
+							navigate('/profile');
+						}}
+					>
+						Profile
+					</Typography>
+				</Box>
 				<Button
 					color='inherit'
 					onClick={() => setOpenPopup(true)}
@@ -41,7 +92,7 @@ function NavigationBar() {
 					setOpenPopup={setOpenPopup}
 					color='inherit'
 				>
-					<Login/>
+					<Login />
 				</Popup>
 			</Toolbar>
 		</AppBar>
