@@ -6,7 +6,6 @@ import {
 	Toolbar,
 	AppBar,
 	Box,
-	autocompleteClasses,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -20,7 +19,7 @@ function NavigationBar() {
 	return (
 		<AppBar
 			position='static'
-			sx={{ bgcolor: 'orange' }}
+			sx={{ bgcolor: '#788c7c' }}
 		>
 			<Toolbar sx={{ justifyContent: 'space-between', display: 'flex' }}>
 				{/* <IconButton
@@ -87,7 +86,7 @@ function NavigationBar() {
 					Login
 				</Button>
 				<Popup
-					title={'Sign-In'}
+					title={'Login'}
 					openPopup={openPopup}
 					setOpenPopup={setOpenPopup}
 					color='inherit'
