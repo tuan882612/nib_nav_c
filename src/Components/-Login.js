@@ -6,7 +6,8 @@ import {
 	InputLabel,
 	IconButton,
 	Button,
-	TextField,
+	Fade,
+	Alert,
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -40,26 +41,32 @@ function Login() {
 	const { handleSubmit } = useForm();
 
 	const onSubmit = (event) => {
+		var success = false
 		const body = {
 			email: values.username,
 			password: values.password,
 		};
 
-		axios.post('http://localhost:8080/login/', body).then((response) => {
+		axios.post('http://localhost:8080/login/', body)
+		.then((response) => {
 			if (response.status === 200) {
 				sessionStorage.setItem('id', values.username);
 				sessionStorage.setItem("login", true)
-				console.log(sessionStorage.getItem('id'), response.data);
+				success = true
+
+				console.log('Valid login');
 			} else {
 				console.log('Invalid input');
 			}
+			console.log(success)
+			return success
 		});
 	};
 
 	return (
 		<div>
-			<form onSubmit={handleSubmit(onSubmit)}>
-				<div>
+			<form>
+				<Box>
 					<FormControl
 						sx={{ m: 1, width: '25ch' }}
 						variant='outlined'
@@ -72,8 +79,8 @@ function Login() {
 							label='Username'
 						/>
 					</FormControl>
-				</div>
-				<Box sx={{}}>
+				</Box>
+				<Box>
 					<FormControl
 						sx={{ m: 1, width: '25ch' }}
 						variant='outlined'
@@ -121,8 +128,14 @@ function Login() {
 					}}
 				>
 					<Button type='submit'>register</Button>
-					<Button type='submit'>login</Button>
+					<Button onClick={handleSubmit(onSubmit)} type='submit'>login</Button>
 				</Box>
+				<Fade in={onSubmit === true} timeout={4000}>
+					<Alert severity="success">Login Success!</Alert>
+				</Fade>
+				<Fade in={onSubmit === false} timeout={4000}>
+					<Alert severity="error">Invalid Login!</Alert>			
+				</Fade>
 			</form>
 		</div>
 	);
