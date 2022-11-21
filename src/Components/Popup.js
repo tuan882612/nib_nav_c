@@ -14,7 +14,13 @@ function Popup(props) {
 	return (
 		<Dialog open={openPopup}>
 			<DialogTitle>
-				<div style={{ display: 'flex' }}>
+				<div
+					style={{
+						display: 'flex',
+						justifyContent: 'center',
+						alignItems: 'center',
+					}}
+				>
 					<Typography
 						variant='h6'
 						component='div'
