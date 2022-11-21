@@ -1,6 +1,42 @@
+.main-container {
+    min-height: 100vh;
+    background-color: #18191c;
+    color: rgb(255, 255, 255);
+    font-size: calc(10px + 2vmin);
+}
+
 .inputs {
-    margin-top: 50px;
     display: grid;
     align-items: center;
     justify-content: center;
+    grid-gap:  20px;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 50px
+}
+
+.name {
+    display: grid;
+}
+
+.name input {
+    max-width: 200px;
+} 
+
+.email {
+    display: grid;
+}
+
+.email input {
+    max-width: 200px;
+}
+
+.comment {
+    display: grid;
+}
+
+.comment textarea {
+    min-height: 100px;
+    min-width: 500px;
+    resize: none;
+    font-family: inherit;
 }

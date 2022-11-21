@@ -5,8 +5,10 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import NavigationBar from './Components/NavigationBar';
 
-import PreLogin from './Pages/PreLogin';
-import PostLogin from './Pages/PostLogin'
+import Home from './Pages/Home';
+import Feedback from './Pages/Feedback';
+import Profile from './Pages/Profile';
+import Search from './Pages/Search';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -16,7 +18,19 @@ root.render(
 		<Routes>
 			<Route
 				path='/'
-				element={<PreLogin />}
+				element={<Home />}
+			/>
+			<Route
+				path='/search'
+				element={<Search />}
+			/>
+			<Route
+				path='/feedback'
+				element={<Feedback />}
+			/>
+			<Route
+				path='/profile'
+				element={<Profile />}
 			/>
 		</Routes>
 	</Router>
