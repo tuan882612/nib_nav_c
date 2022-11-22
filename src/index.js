@@ -11,22 +11,36 @@ import Home from './Pages/Home';
 import LoginPage from './Pages/Login';
 import Profile from './Pages/Profile';
 import Search from './Pages/Search';
-import checkSession from './utils/UserUtilities';
+import CheckSession from './utils/UserUtilities';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-sessionStorage.setItem("login", false)
-sessionStorage.setItem("id", "")
+CheckSession();
 
 root.render(
 	<Router>
 		<NavigationBar />
 		<Routes>
-			<Route path='/' element={<Home />}/>
-			<Route path='/search' element={<Search />}/>
-			<Route path='/feedback' element={<Feedback />}/>
-			<Route path='/profile' element={<Profile />}/>
-			<Route path='/login' element={<LoginPage />}/>
+			<Route
+				path='/'
+				element={<Home />}
+			/>
+			<Route
+				path='/search'
+				element={<Search />}
+			/>
+			<Route
+				path='/feedback'
+				element={<Feedback />}
+			/>
+			<Route
+				path='/profile'
+				element={<Profile />}
+			/>
+			<Route
+				path='/login'
+				element={<LoginPage />}
+			/>
 		</Routes>
 	</Router>
 );

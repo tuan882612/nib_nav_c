@@ -2,7 +2,7 @@
     display: flex;
     min-height: 100vh;
     justify-content: center;
-    
+
     background-color: #212529;
     color: rgb(255, 255, 255);
     font-size: calc(10px + 2vmin);
@@ -14,7 +14,6 @@
 }
 
 .loginEmail {
-    margin-top: calc(1px + 25vmin);;
     font-size: 20px;
     padding: 0%;
 }
