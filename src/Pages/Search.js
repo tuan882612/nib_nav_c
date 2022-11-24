@@ -7,11 +7,11 @@ import {
 	Autocomplete,
 } from '@react-google-maps/api';
 import { getGeocode, getLatLng } from 'use-places-autocomplete';
-import { Box, InputBase, Icon, Button } from '@mui/material';
+import { Box, InputBase, Icon} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
-import * as jose from 'jose';
+// import * as jose from 'jose';
 import { Buffer } from 'buffer';
 
 const StyledBox = styled(Box)(() => ({
@@ -26,7 +26,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 	width: '22rem',
 	'& .MuiInputBase-input': {
 		margin: theme.spacing('0.5rem', '0.1rem'),
-		// padding: theme.spacing(1, 1, 1, 0),
 	},
 }));
 
@@ -51,6 +50,7 @@ function Search() {
 	const [longitude, setLongitude] = useState(-97.115);
 	const [originLocation, setOriginLocation] = useState('');
 	const [recipe, setRecipe] = useState('');
+	const [token, setToken] = useState('');
 	const originRef = useRef(null);
 	const recipeRef = useRef(null);
 
@@ -65,82 +65,27 @@ function Search() {
 	});
 
 	useEffect(() => {
-		async function signToken() {
-			// // might need to move token to avoid recalling it
-			// const data = {
-			// 	aud: 'doordash',
-			// 	iss: process.env.REACT_APP_DOORDASH_DEVELOPER_ID,
-			// 	kid: process.env.REACT_APP_DOORDASH_KEY_ID,
-			// 	exp: Math.floor(Date.now() / 1000 + 60),
-			// 	iat: Math.floor(Date.now() / 1000),
-			// };
+		const data = {
+			grant_type: 'client_credentials',
+			scope: 'product.compact',
+		};
 
-			// const headers = {
-			// 	alg: 'HS256',
-			// 	header: { 'dd-ver': 'DD-JWT-V1' },
-			// };
-
-			// const token = await new jose.SignJWT(data)
-			// 	.setProtectedHeader(headers)
-			// 	.setIssuedAt()
-			// 	.setIssuer(process.env.REACT_APP_DOORDASH_DEVELOPER_ID)
-			// 	.setAudience('doordash')
-			// 	.sign(
-			// 		Buffer.from(
-			// 			process.env.REACT_APP_DOORDASH_SIGNING_SECRET,
-			// 			'base64'
-			// 		)
-			// 	);
-
-			// console.log(token);
-
-			// const body = JSON.stringify({
-			// 	external_delivery_id: 'D-12345',
-			// 	pickup_address:
-			// 		'901 Market Street 6th Floor San Francisco, CA 94103',
-			// 	pickup_business_name: 'Wells Fargo SF Downtown',
-			// 	pickup_phone_number: '+16505555555',
-			// 	pickup_instructions: 'Enter gate code 1234 on the callbox.',
-			// 	dropoff_address:
-			// 		'901 Market Street 6th Floor San Francisco, CA 94103',
-			// 	dropoff_business_name: 'Wells Fargo SF Downtown',
-			// 	dropoff_phone_number: '+16505555555',
-			// 	dropoff_instructions: 'Enter gate code 1234 on the callbox.',
-			// 	order_value: 1999,
-			// });
-
-			// axios
-			// 	.post(
-			// 		'https://openapi.doordash.com/drive/v2/quotes',
-			// 		body,
-			// 		{
-			// 			headers: {
-			// 				Authorization: 'Bearer ' + token,
-			// 				'Content-Type': 'application/json',
-			// 			},
-			// 		}
-			// 	)
-			// 	.then(function (response) {
-			// 		console.log(response.data);
-			// 	})
-			// 	.catch(function (error) {
-			// 		console.log(error);
-			// 	});
-			// axios
-			// 	.get(
-			// 		`https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&query=pasta&maxFat=25&number=2`
-			// 	)
-			// 	.then((response) => {
-			// 		setResults(response.data.results);
-			// 		console.log(response);
-			// 	});
-
-			// console.log(process.env.REACT_APP_SPOONACULAR_API_KEY);
-		}
-		if (recipe !== '') {
-			signToken();
-		}
-	}, [recipe]);
+		axios
+			.post('https://api-ce.kroger.com/v1/connect/oauth2/token', data, {
+				headers: {
+					Authorization:
+						'Basic ' +
+						Buffer.from(
+							`${process.env.REACT_APP_KROGER_CLIENT_ID}:${process.env.REACT_APP_KROGER_SIGNING_SECRET}`
+						).toString('base64'),
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+			})
+			.then((response) => {
+				console.log(response);
+				setToken(response.data.access_token);
+			});
+	}, []);
 
 	useEffect(() => {
 		if (originLocation !== '') {
@@ -150,25 +95,33 @@ function Search() {
 					setLatitude(lat);
 					setLongitude(lng);
 
-					// let service = new window.google.maps.places.PlacesService(
-					// 	map
-					// );
+					console.log('Bearer ' + token);
 
-					// let request = {
-					// 	location: { lat, lng },
-					// 	radius: 2000,
-					// 	type: ['meal_delivery'],
-					// };
+					axios
+						.get(
+							'https://api-ce.kroger.com/v1/locations?filter.zipCode.near=75052&filter.chain=Kroger',
+							{
+								headers: {
+									Accept: 'application/json',
+									Authorization: 'Bearer ' + token,
+								},
+							}
+						)
+						.then((response) => {
+							console.log(response);
+						});
 
-					// service.nearbySearch(request, (results, status) => {
-					// 	if (
-					// 		status ===
-					// 		window.google.maps.places.PlacesServiceStatus.OK
-					// 	) {
-					// 		setResults(results);
-					// 		console.log(results);
-					// 	}
-					// });
+					axios
+						.get(
+							'https://api-ce.kroger.com/v1/products?filter.term=milk&filter.locationId=03500817',
+							{
+								headers: {
+									Accept: 'application/json',
+									Authorization: 'Bearer ' + token,
+								},
+							}
+						)
+						.then((response) => console.log(response));
 				});
 			} catch (error) {
 				console.log('Error: ', error);
