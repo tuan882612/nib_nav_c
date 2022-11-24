@@ -1,20 +1,25 @@
 import '../Assets/Styles/Profile.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-
-// const getURL = 'http://localhost:8080/user/get/' + sessionStorage.getItem('id');
+import { useNavigate } from 'react-router-dom';
+import CheckSession from '../utils/UserUtilities';
 
 function Profile() {
-	const [name, setName] = useState('');
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
+	const [values, setValues] = useState({
+		name:'',
+		email:'',
+		password:''
+	})
 
     if (sessionStorage.getItem('login') === 'true') {
         axios.get('http://localhost:8080/user/get/' + sessionStorage.getItem('id'))
         .then((response) => {
-            setName(response.data.name)
-            setEmail(response.data.email)
-            setPassword(response.data.password)
+			const body = response.data
+			setValues({...values, 
+				name: body.name,
+				email: body.email,
+				password: body.password
+			})
 		});
     }
 
@@ -22,8 +27,8 @@ function Profile() {
 		<div className='main-container'>
 			<div>
 				<div id='profile-header'>Profile</div>
-				<div className='profile-contents'>Name: {name}</div>
-				<div className='profile-contents'>Email: {email}</div>
+				<div className='profile-contents'>Name: {values.name}</div>
+				<div className='profile-contents'>Email: {values.email}</div>
 			</div>
 		</div>
 	);

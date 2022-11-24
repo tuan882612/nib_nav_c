@@ -1,16 +1,25 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import {
 	AppBar,
-	Box, Button, IconButton, Toolbar, Typography
+	Box, 
+	Button, 
+	IconButton, 
+	Toolbar, 
+	Typography
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import CheckSession from '../../utils/UserUtilities';
+import CheckSession from '../utils/UserUtilities';
+
 
 function NavigationBar() {
-	const [openPopup, setOpenPopup] = useState(false);
 	const navigate = useNavigate();
+	// CheckSession()
+
+	if (sessionStorage.getItem('login') === 'false') {
+		navigate('login')
+	}
 
 	const logButton = () => {
 		return (
@@ -36,27 +45,9 @@ function NavigationBar() {
 		)
 	}
 	
-
-	return (
-		<AppBar
-			position='static'
-			sx={{ bgcolor: '#788c7c' }}
-		>
-			<Toolbar 
-				sx={{
-					justifyContent: 'space-between', 
-					display: 'flex' 
-				}}
-			>
-				{/* <IconButton
-					size='large'
-					edge='start'
-					color='inherit'
-					aria-label='menu'
-					sx={{ mr: 2 }}
-				>
-					<MenuIcon />
-				</IconButton> */}
+	const logIcon = () => {
+		return (
+			(sessionStorage.getItem('login') === 'true')?
 				<Box
 					sx={{
 						flexGrow: 0.1,
@@ -96,20 +87,21 @@ function NavigationBar() {
 					>
 						Profile
 					</Typography>
-				</Box>
-				<Box>
-					{logButton()}
-				</Box>
-				
-				{/* <Popup
-					title={'Login'}
-					openPopup={openPopup}
-					setOpenPopup={setOpenPopup}
-					color='inherit' 
-					
-				>
-					<Login/>
-				</Popup> */}
+				</Box>: 
+				<Box/>
+		)
+	}
+
+	return (
+		<AppBar position='static' sx={{ bgcolor: '#788c7c' }}>
+			<Toolbar 
+				sx={{
+					justifyContent: 'space-between', 
+					display: 'flex' 
+				}}
+			>
+				{logIcon()}
+				<Box>{logButton()}</Box>
 			</Toolbar>
 		</AppBar>
 	);

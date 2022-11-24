@@ -2,13 +2,10 @@ import {
 	Box,
 	OutlinedInput,
 	FormControl,
-	InputAdornment,
-	InputLabel,
 	IconButton,
 	Button,
 	Fade,
 	Alert,
-	TextField,
 	Typography,
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';

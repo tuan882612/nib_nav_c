@@ -1,10 +1,9 @@
-import axios from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './Assets/Styles/index.css';
 
-import NavigationBar from './Components/Navbar/NavigationBar';
+import NavigationBar from './Components/NavBar';
 
 import Feedback from './Pages/Feedback';
 import Home from './Pages/Home';
@@ -14,8 +13,7 @@ import Search from './Pages/Search';
 import CheckSession from './utils/UserUtilities';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-
-CheckSession();
+CheckSession()
 
 root.render(
 	<Router>
