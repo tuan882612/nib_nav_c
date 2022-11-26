@@ -8,18 +8,36 @@ import {
 	Typography
 } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-import CheckSession from '../utils/UserUtilities';
-
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 function NavigationBar() {
+    const [session, setSession] = useState(false)
 	const navigate = useNavigate();
-	// CheckSession()
+    const location = useLocation();
+	const sUrl = 'http://localhost:8080'
+	const curId = sessionStorage.getItem('id')
 
-	if (sessionStorage.getItem('login') === 'false') {
-		navigate('login')
-	}
+	useEffect(() => {
+		if (sessionStorage.getItem('login')==='true') {
+			axios.get(sUrl + "/verify/" + curId)
+			.then((response) => setSession(true))
+			.catch((error) => {
+				sessionStorage.setItem('login', 'false');
+				sessionStorage.setItem('id', '');
+				navigate('/login')
+			})
+		} 
+		// else {
+		// 	const curPath = location.pathname
+
+		// 	if (curPath !== '/login' ||
+		// 	 curPath !== '/register' ||
+		// 	 curPath !== '/auth') {
+		// 		navigate('/login')
+		// 	}
+		// }
+	},[navigate, location, curId, session, setSession]);
 
 	const logButton = () => {
 		return (
@@ -28,6 +46,7 @@ function NavigationBar() {
 					sx={{"&:hover":{bgcolor: '#5b6b5e'}}}
 					color='inherit'
 					onClick={() => {
+						axios.delete(sUrl + "/delete/" + curId)
 						sessionStorage.setItem("login", 'false')
 						sessionStorage.setItem("id", "")
 						navigate('/login')
@@ -35,6 +54,7 @@ function NavigationBar() {
 				>
 					Sign Out
 				</Button>:
+				// <Box/>
 				<Button
 					sx={{"&:hover":{bgcolor: '#5b6b5e'}}}
 					color='inherit'
@@ -45,7 +65,21 @@ function NavigationBar() {
 		)
 	}
 	
-	const logIcon = () => {
+	const navIcon = () => {
+		var i = 0
+		const navItems = ['home','search','feedback','profile']
+			.map((route) => 
+				<Typography
+					key={i++}
+					variant='h6'
+					component='div'
+					sx={{ cursor: 'pointer' }}
+					onClick={() => navigate('/'+route)}
+				>
+					{route}
+				</Typography>
+		)
+
 		return (
 			(sessionStorage.getItem('login') === 'true')?
 				<Box
@@ -55,38 +89,7 @@ function NavigationBar() {
 						justifyContent: 'space-between',
 					}}
 				>
-					<Typography
-						variant='h6'
-						component='div'
-						sx={{ cursor: 'pointer' }}
-						onClick={() => navigate('/')}
-					>
-						Home
-					</Typography>
-					<Typography
-						variant='h6'
-						component='div'
-						sx={{ cursor: 'pointer' }}
-						onClick={() => navigate('/search')}
-					>
-						Search
-					</Typography>
-					<Typography
-						variant='h6'
-						component='div'
-						sx={{ cursor: 'pointer' }}
-						onClick={() => navigate('/feedback')}
-					>
-						Feedback
-					</Typography>
-					<Typography
-						variant='h6'
-						component='div'
-						sx={{ cursor: 'pointer' }}
-						onClick={() => navigate('/profile')}
-					>
-						Profile
-					</Typography>
+					{navItems}
 				</Box>: 
 				<Box/>
 		)
@@ -100,8 +103,8 @@ function NavigationBar() {
 					display: 'flex' 
 				}}
 			>
-				{logIcon()}
-				<Box>{logButton()}</Box>
+				{navIcon()}
+				{logButton()}
 			</Toolbar>
 		</AppBar>
 	);

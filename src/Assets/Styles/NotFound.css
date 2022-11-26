@@ -1,0 +1,13 @@
+.notfound {
+    display: flex;
+    min-height: 93.5vh;
+    justify-content: center;
+    background-color: #212529;
+    color: rgb(255, 255, 255);
+    
+}
+
+.notfound-header {
+    font-size: calc(10px + 2vmin);
+    margin-top: calc(10px + 30vmin);
+}

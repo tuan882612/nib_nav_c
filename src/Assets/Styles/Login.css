@@ -1,0 +1,24 @@
+.loginBody {
+    display: flex;
+    min-height: 93.5vh;
+    justify-content: center;
+
+    background-color: #212529;
+    color: rgb(255, 255, 255);
+    font-size: calc(10px + 2vmin);
+}
+
+.input {
+    background-color: white;
+    border-radius: 7px;
+}
+
+.loginEmail {
+    font-size: 20px;
+    padding: 0%;
+}
+
+.loginPassword {
+    font-size: 20px;
+    padding: 0%;
+}

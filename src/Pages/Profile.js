@@ -1,10 +1,8 @@
 import '../Assets/Styles/Profile.css';
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import CheckSession from '../utils/UserUtilities';
 
-function Profile() {
+function Profile() {	
 	const [values, setValues] = useState({
 		name:'',
 		email:'',
