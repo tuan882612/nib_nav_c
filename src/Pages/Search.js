@@ -20,6 +20,8 @@ import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import { Buffer } from 'buffer';
+import { useNavigate } from 'react-router-dom';
+import CheckSession from '../utils/UserUtilities';
 
 const StyledBox = styled(Box)(() => ({
 	display: 'flex',

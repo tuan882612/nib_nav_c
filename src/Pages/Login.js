@@ -2,13 +2,10 @@ import {
 	Box,
 	OutlinedInput,
 	FormControl,
-	InputAdornment,
-	InputLabel,
 	IconButton,
 	Button,
 	Fade,
 	Alert,
-	TextField,
 	Typography,
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
@@ -18,7 +15,7 @@ import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 
-import '../Assets/Styles/LoginPage.css';
+import '../Assets/Styles/Login.css';
 import { useNavigate } from 'react-router-dom';
 
 const StyledBox = styled(Box)(() => ({
@@ -44,44 +41,34 @@ function LoginPage() {
 
 	const handleChange = (prop) => (event) => {
 		setValues({ ...values, [prop]: event.target.value });
-		console.log(event.target.value);
-	};
-
-	const handleClickShowPassword = () => {
-		setValues({
-			...values,
-			showPassword: !values.showPassword,
-		});
-	};
-
-	const handleMouseDownPassword = (event) => {
-		event.preventDefault();
 	};
 
 	const { handleSubmit } = useForm();
 
+	const handleCred = () => {
+		const body = {
+			email: values.username,
+			password: values.password,
+		};
+
+		axios.post('http://localhost:8080/login/', body)
+		.then((response) => {
+			if (response.status === 200) {
+				sessionStorage.setItem('id', values.username);
+				sessionStorage.setItem('login', 'true');
+				console.log('Valid login');
+				navigate('/home', {replace:true});
+			} else {
+				console.log('Invalid input');
+				navigate('/login');
+			}
+		});
+	}
+
 	return (
 		<Box
 			className='loginBody'
-			onSubmit={handleSubmit(() => {
-				const body = {
-					email: values.username,
-					password: values.password,
-				};
-
-				axios.post('http://localhost:8080/login/', body)
-				.then((response) => {
-					if (response.status === 200) {
-						sessionStorage.setItem('id', values.username);
-						sessionStorage.setItem('login', 'true');
-						console.log('Valid login');
-						navigate('/');
-					} else {
-						console.log('Invalid input');
-						navigate('/login');
-					}
-				});
-			})}
+			onSubmit={handleSubmit(handleCred)}
 		>
 			<Box>
 				<Typography
@@ -122,8 +109,11 @@ function LoginPage() {
 								endAdornment={
 									<IconButton
 										aria-label='toggle-password-visibility'
-										onClick={handleClickShowPassword}
-										onMouseDown={handleMouseDownPassword}
+										onClick={() => 
+											setValues({
+												...values,
+												showPassword: !values.showPassword})}
+										onMouseDown={(event) => event.preventDefault()}
 										edge='end'
 									>
 										{values.showPassword ? (
@@ -138,8 +128,7 @@ function LoginPage() {
 					</Box>
 					<StyledBox>
 						<StyledButton sx={{ mt: 5 }}>
-							{' '}
-							forgot password{' '}
+							forgot password
 						</StyledButton>
 					</StyledBox>
 					<StyledBox>
@@ -148,8 +137,7 @@ function LoginPage() {
 							sx={{ ml: 1 }}
 							type='submit'
 						>
-							{' '}
-							login{' '}
+							login
 						</StyledButton>
 					</StyledBox>
 					{/* <Fade in={onSubmit === true} timeout={4000}>

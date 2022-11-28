@@ -1,6 +1,6 @@
 .body {
   display: flex;
-  min-height: 100vh;
+  min-height: 93.5vh;
   background-color: #212529;
   color: rgb(255, 255, 255);
   font-size: calc(10px + 2vmin);
