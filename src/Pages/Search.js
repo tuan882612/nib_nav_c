@@ -7,59 +7,98 @@ import {
 	Autocomplete,
 } from '@react-google-maps/api';
 import { getGeocode, getLatLng } from 'use-places-autocomplete';
-import { Box, InputBase, Icon, Button } from '@mui/material';
+import {
+	Box,
+	InputBase,
+	Icon,
+	Button,
+	Tabs,
+	Tab,
+	Typography,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
-import * as jose from 'jose';
 import { Buffer } from 'buffer';
 import { useNavigate } from 'react-router-dom';
 import CheckSession from '../utils/UserUtilities';
 
 const StyledBox = styled(Box)(() => ({
-	border: '0.5px',
-	borderStyle: 'solid',
-	borderColor: 'white',
 	display: 'flex',
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
 	color: 'white',
-	width: '22rem',
 	'& .MuiInputBase-input': {
 		margin: theme.spacing('0.5rem', '0.1rem'),
-		// padding: theme.spacing(1, 1, 1, 0),
 	},
 }));
 
+const StyledButton = styled(Button)(() => ({
+	backgroundColor: '#788c7c',
+	color: 'white',
+	'&:hover': { backgroundColor: '#5b6b5e' },
+}));
+
 const StyledRestaurant = styled(Box)(() => ({
-	width: '25rem',
+	width: '20rem',
 	height: '30rem',
 	color: 'black',
-	backgroundColor: 'white',
+	backgroundColor: '#212529',
 	mb: 2,
 	display: 'flex',
 	flexDirection: 'column',
 	overflow: 'hidden',
 	overflowY: 'scroll',
+	marginLeft: '9rem',
 }));
+
+function TabPanel(props) {
+	const { children, value, index, ...other } = props;
+
+	return (
+		<div
+			role='tabpanel'
+			hidden={value !== index}
+			id={`simple-tabpanel-${index}`}
+			aria-labelledby={`simple-tab-${index}`}
+			{...other}
+		>
+			{value === index && (
+				<Box sx={{ p: 3 }}>
+					<Typography>{children}</Typography>
+				</Box>
+			)}
+		</div>
+	);
+}
 
 const libraries = ['places', 'directions'];
 
 function Search() {
+	const [token, setToken] = useState('');
 	const [map, setMap] = useState(null);
-	const [results, setResults] = useState([]);
 	const [latitude, setLatitude] = useState(32.731);
 	const [longitude, setLongitude] = useState(-97.115);
-	const [originLocation, setOriginLocation] = useState('');
+	const [location, setLocation] = useState('');
+	const [prices, setPrices] = useState([]);
 	const [recipe, setRecipe] = useState('');
-	const originRef = useRef(null);
-	const recipeRef = useRef(null);
+	const [selectedRecipe, setSelectedRecipe] = useState([]);
+	const [recipeList, setRecipeList] = useState([]);
+	const [ingredients, setIngredients] = useState(['butter', 'milk', 'sugar']);
+	const [stores, setStores] = useState([]);
+	const [selectedStore, setSelectedStore] = useState([]);
+	const [tab, setTab] = useState(0);
 
 	const center = useMemo(
 		() => ({ lat: latitude, lng: longitude }),
 		[latitude, longitude]
 	);
+
+	const handleChange = (event, newValue) => {
+		setTab(newValue);
+		console.log(tab);
+	};
 
 	const { isLoaded } = useLoadScript({
 		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -67,116 +106,161 @@ function Search() {
 	});
 
 	useEffect(() => {
-		async function signToken() {
-			// // might need to move token to avoid recalling it
-			// const data = {
-			// 	aud: 'doordash',
-			// 	iss: process.env.REACT_APP_DOORDASH_DEVELOPER_ID,
-			// 	kid: process.env.REACT_APP_DOORDASH_KEY_ID,
-			// 	exp: Math.floor(Date.now() / 1000 + 60),
-			// 	iat: Math.floor(Date.now() / 1000),
-			// };
+		const data = {
+			grant_type: 'client_credentials',
+			scope: 'product.compact',
+		};
 
-			// const headers = {
-			// 	alg: 'HS256',
-			// 	header: { 'dd-ver': 'DD-JWT-V1' },
-			// };
-
-			// const token = await new jose.SignJWT(data)
-			// 	.setProtectedHeader(headers)
-			// 	.setIssuedAt()
-			// 	.setIssuer(process.env.REACT_APP_DOORDASH_DEVELOPER_ID)
-			// 	.setAudience('doordash')
-			// 	.sign(
-			// 		Buffer.from(
-			// 			process.env.REACT_APP_DOORDASH_SIGNING_SECRET,
-			// 			'base64'
-			// 		)
-			// 	);
-
-			// console.log(token);
-
-			// const body = JSON.stringify({
-			// 	external_delivery_id: 'D-12345',
-			// 	pickup_address:
-			// 		'901 Market Street 6th Floor San Francisco, CA 94103',
-			// 	pickup_business_name: 'Wells Fargo SF Downtown',
-			// 	pickup_phone_number: '+16505555555',
-			// 	pickup_instructions: 'Enter gate code 1234 on the callbox.',
-			// 	dropoff_address:
-			// 		'901 Market Street 6th Floor San Francisco, CA 94103',
-			// 	dropoff_business_name: 'Wells Fargo SF Downtown',
-			// 	dropoff_phone_number: '+16505555555',
-			// 	dropoff_instructions: 'Enter gate code 1234 on the callbox.',
-			// 	order_value: 1999,
-			// });
-
-			// axios
-			// 	.post(
-			// 		'https://openapi.doordash.com/drive/v2/quotes',
-			// 		body,
-			// 		{
-			// 			headers: {
-			// 				Authorization: 'Bearer ' + token,
-			// 				'Content-Type': 'application/json',
-			// 			},
-			// 		}
-			// 	)
-			// 	.then(function (response) {
-			// 		console.log(response.data);
-			// 	})
-			// 	.catch(function (error) {
-			// 		console.log(error);
-			// 	});
-			// axios
-			// 	.get(
-			// 		`https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&query=pasta&maxFat=25&number=2`
-			// 	)
-			// 	.then((response) => {
-			// 		setResults(response.data.results);
-			// 		console.log(response);
-			// 	});
-
-			// console.log(process.env.REACT_APP_SPOONACULAR_API_KEY);
-		}
-		if (recipe !== '') {
-			signToken();
-		}
-	}, [recipe]);
+		axios
+			.post('https://api-ce.kroger.com/v1/connect/oauth2/token', data, {
+				headers: {
+					Authorization:
+						'Basic ' +
+						Buffer.from(
+							`${process.env.REACT_APP_KROGER_CLIENT_ID}:${process.env.REACT_APP_KROGER_SIGNING_SECRET}`
+						).toString('base64'),
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+			})
+			.then((response) => {
+				console.log(response);
+				setToken(response.data.access_token);
+			});
+	}, []);
 
 	useEffect(() => {
-		if (originLocation !== '') {
+		if (location !== '' && recipe !== '') {
 			try {
-				getGeocode(originLocation).then((results) => {
+				getGeocode(location).then((results) => {
 					const { lat, lng } = getLatLng(results[0]);
 					setLatitude(lat);
 					setLongitude(lng);
 
-					// let service = new window.google.maps.places.PlacesService(
-					// 	map
-					// );
+					if (recipeList.length === 0) {
+						setTab(0);
+						console.log(tab);
+					}
+					// axios
+					// 	.get(
+					// 		`https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&query=${recipe}&number=10`
+					// 	)
+					// 	.then((response) => {
+					// 		setRecipeList(response.data.results);
+					// 		console.log(response);
+					// 	});
 
-					// let request = {
-					// 	location: { lat, lng },
-					// 	radius: 2000,
-					// 	type: ['meal_delivery'],
-					// };
+					console.log('Bearer ' + token);
 
-					// service.nearbySearch(request, (results, status) => {
-					// 	if (
-					// 		status ===
-					// 		window.google.maps.places.PlacesServiceStatus.OK
-					// 	) {
-					// 		setResults(results);
-					// 		console.log(results);
-					// 	}
-					// });
+					axios
+						.get(
+							`https://api-ce.kroger.com/v1/locations?filter.latLong.near=${lat},${lng}&filter.chain=Kroger&filter.radiusInMiles=5`,
+							{
+								headers: {
+									Accept: 'application/json',
+									Authorization: 'Bearer ' + token,
+								},
+							}
+						)
+						.then((response) => {
+							setStores(response.data.data);
+							console.log(stores);
+						});
 				});
 			} catch (error) {
 				console.log('Error: ', error);
 			}
 		}
-	}, [originLocation, map]);
+	}, [location, map]);
+
+	useEffect(() => {
+		// axios
+		// 	.get(
+		// 		`https://api.spoonacular.com/recipes/${selectedRecipe.id}/information?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&includeNutrition=false`
+		// 	)
+		// 	.then((response) => {
+		// 		setIngredients(response.data.extendedIngredients);
+		//		if(selectedStore === '')
+		// {
+		// 	setTab(1);
+		// }
+		// 		console.log(ingredients);
+		// 	});
+	}, [selectedRecipe]);
+
+	// useEffect(() => {
+	// 	setPrices([]);
+	// 	ingredients.map((ingredient) => {
+	// 		axios
+	// 			.get(
+	// 				`https://api-ce.kroger.com/v1/products?filter.term=${ingredient.nameClean}&filter.locationId=03500817`,
+	// 				{
+	// 					headers: {
+	// 						Accept: 'application/json',
+	// 						Authorization: 'Bearer ' + token,
+	// 					},
+	// 				}
+	// 			)
+	// 			.then((response) => {
+	// 				for (let i = 0; i < response.data.data.length; i++) {
+	// 					if (
+	// 						response.data.data[i].items[0].hasOwnProperty(
+	// 							'price'
+	// 						)
+	// 					) {
+	// 						setPrices((prices) => [
+	// 							...prices,
+	// 							response.data.data[i].items[0].price.regular,
+	// 						]);
+	// 						console.log(
+	// 							response.data.data[i].items[0].price.regular
+	// 						);
+	// 						break;
+	// 					}
+	// 				}
+	// 				console.log(prices);
+	// 				console.log(response);
+	// 			});
+	// 	});
+
+	// 	console.log(prices);
+	// }, [ingredient]);
+
+	useEffect(() => {
+		if (selectedStore !== '' && ingredients !== []) {
+			setPrices([]);
+			ingredients.map((ingredient) => {
+				axios
+					.get(
+						`https://api-ce.kroger.com/v1/products?filter.term=${ingredient}&filter.locationId=${selectedStore.locationId}`,
+						{
+							headers: {
+								Accept: 'application/json',
+								Authorization: 'Bearer ' + token,
+							},
+						}
+					)
+					.then((response) => {
+						for (let i = 0; i < response.data.data.length; i++) {
+							if (
+								response.data.data[i].items[0].hasOwnProperty(
+									'price'
+								)
+							) {
+								setPrices((prices) => [
+									...prices,
+									response.data.data[i].items[0].price
+										.regular,
+								]);
+								break;
+							}
+						}
+					});
+			});
+			
+			setTab(2);
+			console.log(prices);
+		}
+	}, [selectedStore, ingredients]);
 
 	if (!isLoaded) return <div className='body'></div>;
 
@@ -184,41 +268,12 @@ function Search() {
 		<div className='body'>
 			<div className='mid-body'>
 				<Box sx={{ display: 'inline-flex' }}>
-					<Box>
-						<StyledBox>
-							<Icon
-								sx={{
-									p: '10px',
-									color: 'white',
-									height: '0.65rem',
-								}}
-								aria-label='search'
-							>
-								<SearchIcon />
-							</Icon>
-							<Autocomplete>
-								<StyledInputBase
-									ref={originRef}
-									inputProps={{
-										maxLength: 50,
-										placeholder: 'Current Location',
-									}}
-									onKeyPress={async (event) => {
-										if (event.key === 'Enter') {
-											let address = {
-												address: event.target.value,
-											};
-											setOriginLocation(address);
-										}
-									}}
-								></StyledInputBase>
-							</Autocomplete>
-						</StyledBox>
+					<Box sx={{ marginRight: '50px' }}>
 						<GoogleMap
 							onLoad={(map) => {
 								setMap(map);
 							}}
-							zoom={14}
+							zoom={12}
 							center={center}
 							mapContainerClassName='map-container'
 							options={{
@@ -227,40 +282,190 @@ function Search() {
 							}}
 						>
 							<MarkerF position={center} />
+							{stores.map((item) => {
+								return (
+									<MarkerF
+										position={{
+											lat: item.geolocation.latitude,
+											lng: item.geolocation.longitude,
+										}}
+									/>
+								);
+							})}
 						</GoogleMap>
 					</Box>
-					<Box sx={{ marginLeft: '5rem' }}>
-						<StyledBox>
-							<Icon
+					<Box
+						sx={{
+							width: '40rem',
+							justifyContent: 'center',
+							alignItems: 'center',
+							display: 'inline-block',
+							backgroundColor: '#818284',
+							height: '45rem',
+							borderRadius: '20px',
+						}}
+					>
+						<StyledBox
+							sx={{
+								display: 'flex',
+								justifyContent: 'space-around',
+								border: 'none',
+								width: '40rem',
+								marginTop: '20px',
+								marginBottom: '20px',
+							}}
+						>
+							<StyledBox
 								sx={{
-									p: '10px',
-									color: 'white',
-									height: '0.65rem',
+									background: '#212529',
+									borderRadius: '5px',
 								}}
-								aria-label='search'
 							>
-								<SearchIcon />
-							</Icon>
-							<Autocomplete>
+								<Icon
+									sx={{
+										p: '10px',
+										color: 'white',
+										height: '0.65rem',
+									}}
+								>
+									<SearchIcon></SearchIcon>
+								</Icon>
+								<Autocomplete>
+									<StyledInputBase
+										sx={{ width: '15rem' }}
+										id='address'
+										inputProps={{
+											maxLength: 50,
+											placeholder: 'Current Location',
+										}}
+									></StyledInputBase>
+								</Autocomplete>
+							</StyledBox>
+							<StyledBox
+								sx={{
+									background: '#212529',
+									borderRadius: '5px',
+								}}
+							>
+								<Icon
+									sx={{
+										p: '10px',
+										color: 'white',
+										height: '0.65rem',
+									}}
+								>
+									<SearchIcon></SearchIcon>
+								</Icon>
 								<StyledInputBase
-									ref={recipeRef}
+									sx={{ width: '10rem' }}
+									id='recipe'
 									inputProps={{
 										maxLength: 50,
 										placeholder: 'Enter Recipe',
 									}}
-									onKeyPress={(event) => {
-										if (event.key === 'Enter') {
-											setRecipe(event.target.value);
-										}
-									}}
 								></StyledInputBase>
-							</Autocomplete>
+							</StyledBox>
+							<StyledButton
+								sx={{
+									border: 'solid',
+								}}
+								onClick={async () => {
+									let address = {
+										address:
+											document.getElementById('address')
+												.value,
+									};
+									setLocation(address);
+									setRecipe(
+										document.getElementById('recipe').value
+									);
+								}}
+							>
+								Submit
+							</StyledButton>
 						</StyledBox>
-						<StyledRestaurant>
-							{results.map((item) => {
-								return <div>{item.title}</div>;
-							})}
-						</StyledRestaurant>
+						<Box
+							sx={{
+								display: 'inline-block',
+								justifyContent: 'space-evenly',
+								alignItems: 'center',
+								ml: '12rem',
+								backgroundColor: '#788c7c',
+								border: 'solid',
+							}}
+						>
+							<Tabs
+								value={tab}
+								onChange={handleChange}
+								textColor='white'
+								TabIndicatorProps={{
+									style: {
+										backgroundColor: 'black',
+									},
+								}}
+							>
+								<Tab
+									label='Recipes'
+									{...(<div>yo</div>)}
+								/>
+								<Tab label='Store' />
+								<Tab label='Price' />
+							</Tabs>
+						</Box>
+						<TabPanel
+							value={tab}
+							index={0}
+						>
+							{
+								<StyledRestaurant>
+									{recipeList.map((item) => {
+										return (
+											<Button
+												onClick={() => {
+													setSelectedRecipe(item);
+													console.log(selectedRecipe);
+												}}
+											>
+												{item.title}
+											</Button>
+										);
+									})}
+								</StyledRestaurant>
+							}
+						</TabPanel>
+						<TabPanel
+							value={tab}
+							index={1}
+						>
+							{
+								<StyledRestaurant>
+									{stores.map((item) => {
+										return (
+											<Button
+												onClick={() => {
+													setSelectedStore(item);
+													console.log(selectedStore);
+												}}
+											>
+												{item.name}
+											</Button>
+										);
+									})}
+								</StyledRestaurant>
+							}
+						</TabPanel>
+						<TabPanel
+							value={tab}
+							index={2}
+						>
+							{
+								<StyledRestaurant>
+									{prices.map((item) => {
+										return <Button>{item}</Button>;
+									})}
+								</StyledRestaurant>
+							}
+						</TabPanel>
 					</Box>
 				</Box>
 			</div>
