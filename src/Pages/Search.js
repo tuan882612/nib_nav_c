@@ -1,10 +1,11 @@
 import '../Assets/Styles/Search.css';
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
 	GoogleMap,
 	useLoadScript,
 	MarkerF,
 	Autocomplete,
+	InfoBox,
 } from '@react-google-maps/api';
 import { getGeocode, getLatLng } from 'use-places-autocomplete';
 import {
@@ -22,6 +23,9 @@ import axios from 'axios';
 import { Buffer } from 'buffer';
 import { useNavigate } from 'react-router-dom';
 import CheckSession from '../utils/UserUtilities';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 
 const StyledBox = styled(Box)(() => ({
 	display: 'flex',
@@ -31,17 +35,29 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 	color: 'white',
 	'& .MuiInputBase-input': {
 		margin: theme.spacing('0.5rem', '0.1rem'),
+		color: 'white',
+		backgroundColor: '#212529',
 	},
 }));
 
 const StyledButton = styled(Button)(() => ({
-	backgroundColor: '#788c7c',
+	backgroundColor: '#2E3837',
 	color: 'white',
-	'&:hover': { backgroundColor: '#5b6b5e' },
+	'&:hover': { backgroundColor: '#483C33' },
+}));
+
+const ListButton = styled(Button)(() => ({
+	backgroundColor: '#2E3837',
+	borderRadius: '0',
+	padding: '20px',
+	borderBottom: 'solid',
+	borderWidth: '1px',
+	color: 'white',
+	'&:hover': { backgroundColor: '#483C33' },
 }));
 
 const StyledRestaurant = styled(Box)(() => ({
-	width: '20rem',
+	width: '30rem',
 	height: '30rem',
 	color: 'black',
 	backgroundColor: '#212529',
@@ -50,7 +66,28 @@ const StyledRestaurant = styled(Box)(() => ({
 	flexDirection: 'column',
 	overflow: 'hidden',
 	overflowY: 'scroll',
-	marginLeft: '9rem',
+	marginLeft: '3.5rem',
+	border: 'solid',
+	borderWidth: '1px',
+	borderColor: 'black',
+}));
+
+const StyledReceipt = styled(Box)(() => ({
+	width: '30rem',
+	height: '27.7rem',
+	color: 'black',
+	backgroundColor: 'white',
+	mb: 2,
+	display: 'flex',
+	flexDirection: 'column',
+	overflow: 'hidden',
+	overflowY: 'scroll',
+	marginLeft: '3.5rem',
+	border: 'solid',
+	borderWidth: '1px',
+	borderColor: 'black',
+	justifyContent: 'center',
+	alignItems: 'center',
 }));
 
 function TabPanel(props) {
@@ -73,6 +110,7 @@ function TabPanel(props) {
 	);
 }
 
+const bcolor = '#2E3837';
 const libraries = ['places', 'directions'];
 
 function Search() {
@@ -85,10 +123,19 @@ function Search() {
 	const [recipe, setRecipe] = useState('');
 	const [selectedRecipe, setSelectedRecipe] = useState([]);
 	const [recipeList, setRecipeList] = useState([]);
-	const [ingredients, setIngredients] = useState(['butter', 'milk', 'sugar']);
+	const [ingredients, setIngredients] = useState([
+		'butter',
+		'milk',
+		'sugar',
+		'eggs',
+		'dogs',
+		'yogurt',
+		'apples',
+	]);
 	const [stores, setStores] = useState([]);
 	const [selectedStore, setSelectedStore] = useState([]);
 	const [tab, setTab] = useState(0);
+	const [cost, setCost] = useState(0);
 
 	const center = useMemo(
 		() => ({ lat: latitude, lng: longitude }),
@@ -140,6 +187,7 @@ function Search() {
 						setTab(0);
 						console.log(tab);
 					}
+
 					// axios
 					// 	.get(
 					// 		`https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&query=${recipe}&number=10`
@@ -251,16 +299,32 @@ function Search() {
 									response.data.data[i].items[0].price
 										.regular,
 								]);
+								setCost(
+									(cost) =>
+										cost +
+										response.data.data[i].items[0].price
+											.regular
+								);
 								break;
 							}
 						}
 					});
 			});
-			
+
 			setTab(2);
 			console.log(prices);
 		}
 	}, [selectedStore, ingredients]);
+
+	useEffect(() => {
+		setCost(0);
+	}, [location, recipe, selectedStore, selectedRecipe]);
+
+	const options = {
+		closeBoxURL: '',
+		enableEventPropagation: true,
+		disableAutoPan: true,
+	};
 
 	if (!isLoaded) return <div className='body'></div>;
 
@@ -268,31 +332,105 @@ function Search() {
 		<div className='body'>
 			<div className='mid-body'>
 				<Box sx={{ display: 'inline-flex' }}>
-					<Box sx={{ marginRight: '50px' }}>
-						<GoogleMap
-							onLoad={(map) => {
-								setMap(map);
+					<Box
+						sx={{
+							display: 'inline',
+							border: 'solid',
+							borderWidth: '1px',
+							marginRight: '50px',
+							height: '45rem',
+							borderRadius: '20px',
+							backgroundColor: bcolor,
+						}}
+					>
+						<Box
+							sx={{
+								justifyContent: 'space-evenly',
+								alignItems: 'center',
+								display: 'block',
+								textAlign: 'center',
+								padding: '30px',
+								borderRadius: '20px',
+								borderBottom: 'none',
+								borderBottom: 'solid',
+								borderWidth: '1px',
+								backgroundColor: '#5f7470',
+								borderBottomLeftRadius: '0px',
+								borderBottomRightRadius: '0px',
 							}}
-							zoom={12}
-							center={center}
-							mapContainerClassName='map-container'
-							options={{
-								streetViewControl: false,
-								mapTypeControl: false,
+							fontFamily={''}
+						>
+							Map
+						</Box>
+						<Box
+							sx={{
+								border: '1px',
+								borderColor: 'black',
+								margin: '3rem',
+								marginTop: '3rem',
 							}}
 						>
-							<MarkerF position={center} />
-							{stores.map((item) => {
-								return (
-									<MarkerF
-										position={{
-											lat: item.geolocation.latitude,
-											lng: item.geolocation.longitude,
-										}}
-									/>
-								);
-							})}
-						</GoogleMap>
+							<GoogleMap
+								onLoad={(map) => {
+									setMap(map);
+								}}
+								zoom={11}
+								center={center}
+								mapContainerClassName='map-container'
+								options={{
+									streetViewControl: false,
+									mapTypeControl: false,
+								}}
+							>
+								<MarkerF position={center} />
+
+								{stores.map((item) => {
+									return (
+										<MarkerF
+											position={{
+												lat: item.geolocation.latitude,
+												lng: item.geolocation.longitude,
+											}}
+										>
+											<InfoBox
+												options={options}
+												position={{
+													lat: item.geolocation
+														.latitude,
+													lng: item.geolocation
+														.longitude,
+												}}
+											>
+												<div
+													style={{
+														padding: 12,
+														background:
+															'rgba(0, 0, 0, 0.7)',
+													}}
+												>
+													<div
+														style={{
+															fontSize: 16,
+															fontColor: `#08233B`,
+														}}
+													>
+														{item.address
+															.addressLine1 +
+															', ' +
+															item.address.city +
+															', ' +
+															item.address.state +
+															' ' +
+															item.address
+																.zipCode}
+													</div>
+												</div>
+											</InfoBox>
+										</MarkerF>
+									);
+								})}
+							</GoogleMap>
+						</Box>
 					</Box>
 					<Box
 						sx={{
@@ -300,9 +438,11 @@ function Search() {
 							justifyContent: 'center',
 							alignItems: 'center',
 							display: 'inline-block',
-							backgroundColor: '#818284',
+							backgroundColor: '#5f7470',
 							height: '45rem',
 							borderRadius: '20px',
+							border: 'solid',
+							borderWidth: '1px',
 						}}
 					>
 						<StyledBox
@@ -336,7 +476,7 @@ function Search() {
 										id='address'
 										inputProps={{
 											maxLength: 50,
-											placeholder: 'Current Location',
+											placeholder: 'Enter Location',
 										}}
 									></StyledInputBase>
 								</Autocomplete>
@@ -368,6 +508,7 @@ function Search() {
 							<StyledButton
 								sx={{
 									border: 'solid',
+									borderWidth: '1px',
 								}}
 								onClick={async () => {
 									let address = {
@@ -390,8 +531,10 @@ function Search() {
 								justifyContent: 'space-evenly',
 								alignItems: 'center',
 								ml: '12rem',
-								backgroundColor: '#788c7c',
+								backgroundColor: '#2E3837',
 								border: 'solid',
+								borderWidth: '1px',
+								borderBottom: 'none',
 							}}
 						>
 							<Tabs
@@ -400,16 +543,38 @@ function Search() {
 								textColor='white'
 								TabIndicatorProps={{
 									style: {
-										backgroundColor: 'black',
+										backgroundColor: 'white',
 									},
 								}}
 							>
 								<Tab
+									sx={{
+										'&:hover': {
+											backgroundColor: '#483C33',
+										},
+									}}
+									icon={<MenuBookIcon />}
 									label='Recipes'
 									{...(<div>yo</div>)}
 								/>
-								<Tab label='Store' />
-								<Tab label='Price' />
+								<Tab
+									sx={{
+										'&:hover': {
+											backgroundColor: '#483C33',
+										},
+									}}
+									icon={<LocalGroceryStoreIcon />}
+									label='Stores'
+								/>
+								<Tab
+									sx={{
+										'&:hover': {
+											backgroundColor: '#483C33',
+										},
+									}}
+									icon={<ReceiptIcon />}
+									label='Cost'
+								/>
 							</Tabs>
 						</Box>
 						<TabPanel
@@ -441,14 +606,21 @@ function Search() {
 								<StyledRestaurant>
 									{stores.map((item) => {
 										return (
-											<Button
+											<ListButton
 												onClick={() => {
 													setSelectedStore(item);
 													console.log(selectedStore);
 												}}
 											>
-												{item.name}
-											</Button>
+												Kroger -{' '}
+												{item.address.addressLine1 +
+													', ' +
+													item.address.city +
+													', ' +
+													item.address.state +
+													' ' +
+													item.address.zipCode}
+											</ListButton>
 										);
 									})}
 								</StyledRestaurant>
@@ -459,11 +631,141 @@ function Search() {
 							index={2}
 						>
 							{
-								<StyledRestaurant>
-									{prices.map((item) => {
-										return <Button>{item}</Button>;
-									})}
-								</StyledRestaurant>
+								<Box>
+									<StyledReceipt>
+										<Typography
+											fontWeight={'bold'}
+											fontSize={'30px'}
+										>
+											Kroger
+										</Typography>
+										<Typography>
+											{/* {selectedStore.address.addressLine1} */}
+										</Typography>
+										<Typography>
+											{
+												'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
+											}
+										</Typography>
+										<Typography>
+											{'CASH RECEIPT'}
+										</Typography>
+										<Typography>
+											{
+												'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
+											}
+										</Typography>
+										<Box
+											sx={{
+												display: 'flex',
+												flexDirection: 'row',
+												justifyContent: 'space-between',
+												width: '20rem',
+											}}
+										>
+											<Typography fontWeight={'bold'}>
+												Description
+											</Typography>
+											<Typography fontWeight={'bold'}>
+												{' '}
+												Price
+											</Typography>
+										</Box>
+										<Box
+											sx={{
+												width: '20rem',
+											}}
+										>
+											{prices.map((item, index) => {
+												return (
+													<Box
+														sx={{
+															display: 'flex',
+															flexDirection:
+																'row',
+															justifyContent:
+																'space-evenly',
+														}}
+													>
+														<Typography
+															sx={{
+																display:
+																	'block',
+																color: 'black',
+																flexGrow: '1',
+															}}
+														>
+															{ingredients[index]}
+														</Typography>
+														<Typography
+															sx={{
+																color: 'black',
+															}}
+														>
+															{item}
+														</Typography>
+													</Box>
+												);
+											})}
+										</Box>
+										<Typography>
+											{
+												'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
+											}
+										</Typography>
+										<Box
+											sx={{
+												display: 'flex',
+												flexDirection: 'row',
+												justifyContent: 'space-between',
+												width: '20rem',
+											}}
+										>
+											<Typography
+												fontSize={'18px'}
+												fontWeight={'bold'}
+											>
+												Total
+											</Typography>
+											<Typography fontWeight={'bold'}>
+												{cost.toFixed(2)}
+											</Typography>
+										</Box>
+										<Typography>
+											{
+												'* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'
+											}
+										</Typography>
+										<Typography
+											fontSize={'18px'}
+											fontWeight={'bold'}
+										>
+											{' '}
+											THANK YOU!
+										</Typography>
+									</StyledReceipt>
+									<Box sx={{ display: 'flex' }}>
+										<Button
+											sx={{
+												color: 'white',
+												backgroundColor: '#d90429',
+												marginLeft: '3.5rem',
+												width: '30.12rem',
+												borderTopLeftRadius: '0',
+												borderTopRightRadius: '0',
+												border: 'solid',
+												borderWidth: '1px',
+												borderTop: 'none',
+												borderColor: 'black',
+												'&:hover': {
+													backgroundColor: '#9A031C',
+												},
+											}}
+										>
+											Favorite
+										</Button>
+									</Box>
+								</Box>
 							}
 						</TabPanel>
 					</Box>

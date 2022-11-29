@@ -26,9 +26,9 @@ const StyledBox = styled(Box)(() => ({
 }));
 
 const StyledButton = styled(Button)(() => ({
-	backgroundColor: '#788c7c',
+	backgroundColor: '#5f7470',
 	color: 'white',
-	'&:hover': { backgroundColor: '#5b6b5e' },
+	'&:hover': { backgroundColor: '#495A57' },
 }));
 
 function LoginPage() {
@@ -51,19 +51,18 @@ function LoginPage() {
 			password: values.password,
 		};
 
-		axios.post('http://localhost:8080/login/', body)
-		.then((response) => {
+		axios.post('http://localhost:8080/login/', body).then((response) => {
 			if (response.status === 200) {
 				sessionStorage.setItem('id', values.username);
 				sessionStorage.setItem('login', 'true');
 				console.log('Valid login');
-				navigate('/home', {replace:true});
+				navigate('/home', { replace: true });
 			} else {
 				console.log('Invalid input');
 				navigate('/login');
 			}
 		});
-	}
+	};
 
 	return (
 		<Box
@@ -109,11 +108,16 @@ function LoginPage() {
 								endAdornment={
 									<IconButton
 										aria-label='toggle-password-visibility'
-										onClick={() => 
+										onClick={() =>
 											setValues({
 												...values,
-												showPassword: !values.showPassword})}
-										onMouseDown={(event) => event.preventDefault()}
+												showPassword:
+													!values.showPassword,
+											})
+										}
+										onMouseDown={(event) =>
+											event.preventDefault()
+										}
 										edge='end'
 									>
 										{values.showPassword ? (
