@@ -34,7 +34,7 @@ const StyledButton = styled(Button)(() => ({
 function LoginPage() {
 	const navigate = useNavigate();
 	const [values, setValues] = useState({
-		username: '',
+		email: '',
 		password: '',
 		showPassword: false,
 	});
@@ -47,13 +47,14 @@ function LoginPage() {
 
 	const handleCred = (event) => {
 		const body = {
-			email: values.username,
+			email: values.email,
 			password: values.password,
 		};
 
-		axios.post('http://localhost:8080/login/', body).then((response) => {
+		axios.post('http://localhost:8080/login/', body)
+		.then((response) => {
 			if (response.status === 200) {
-				sessionStorage.setItem('id', values.username);
+				sessionStorage.setItem('id', values.email);
 				sessionStorage.setItem('login', 'true');
 				console.log('Valid login');
 				navigate('/home', { replace: true });
@@ -88,9 +89,10 @@ function LoginPage() {
 							variant='outlined'
 						>
 							<OutlinedInput
-								type={'username'}
-								value={values.username}
-								onChange={handleChange('username')}
+								type={'name'}
+								value={values.email}
+								placeholder='Enter Email'
+								onChange={handleChange('email')}
 							/>
 						</FormControl>
 					</Box>
@@ -104,6 +106,7 @@ function LoginPage() {
 							<OutlinedInput
 								type={values.showPassword ? 'text' : 'password'}
 								value={values.password}
+								placeholder='Enter Password'
 								onChange={handleChange('password')}
 								endAdornment={
 									<IconButton

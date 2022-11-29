@@ -4,8 +4,6 @@ import {
 	FormControl,
 	IconButton,
 	Button,
-	Fade,
-	Alert,
 	Typography,
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
@@ -13,10 +11,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { styled } from '@mui/material/styles';
-import axios from 'axios';
 
 import '../Assets/Styles/Register.css';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const StyledBox = styled(Box)(() => ({
 	display: 'flex',
@@ -31,7 +28,7 @@ const StyledButton = styled(Button)(() => ({
 	'&:hover': { backgroundColor: '#5b6b5e' },
 }));
 
-function RegisterPage() {
+function Register() {
 	const navigate = useNavigate();
 
 	const [values, setValues] = useState({
@@ -44,10 +41,10 @@ function RegisterPage() {
 	});
 
     const [error, setError] = useState({
-		email: '',
-        name: '',
-		password: '',
-        confirmPassword: '',
+		email: 'Please enter Email.',
+        name: 'Please enter name.',
+		password: 'Please enter Password.',
+        confirmPassword: 'Please enter Confirm Password.',
 	});
 
     const validateEmail = (email) => {
@@ -93,6 +90,8 @@ function RegisterPage() {
                 case "password":
                     if (!value) {
                         stateObj[prop] = "Please enter Password.";
+                    } else if (value.length < 8) {
+                        stateObj[prop] = "Please enter Password with a minimum length 8.";
                     } else if (values.confirmPassword && value !== values.confirmPassword) {
                         stateObj["confirmPassword"] = "Password and Confirm Password does not match.";
                     } else {
@@ -120,8 +119,8 @@ function RegisterPage() {
 
 	const handleCred = () => {
 		const body = {
-			email: values.email,
             name: values.name,
+			email: values.email,
 			password: values.password,
 		};
 
@@ -248,4 +247,4 @@ function RegisterPage() {
 	);
 }
 
-export default RegisterPage;
+export default Register;
