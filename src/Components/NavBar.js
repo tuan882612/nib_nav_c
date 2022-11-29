@@ -19,19 +19,19 @@ function NavigationBar() {
 	const curId = sessionStorage.getItem('id');
 
 	useEffect(() => {
-		if (sessionStorage.getItem('login') === 'true') {
-			axios
-				.get(sUrl + '/verify/' + curId)
-				.then((response) => setSession(true))
-				.catch((error) => {
-					if (sessionStorage.getItem('login') === 'true') {
-						navigate('/login');
-					}
-					sessionStorage.setItem('login', 'false');
-					sessionStorage.setItem('id', '');
-				});
+		if (sessionStorage.getItem('login')==='true') {
+			axios.get(sUrl + "/verify/" + curId)
+			.then((response) => setSession(true))
+			.catch((error) => {
+				if (sessionStorage.getItem('login')==='true')
+				{
+					navigate('/login')
+				}
+				sessionStorage.setItem('login', 'false');
+				sessionStorage.setItem('id', '');
+			})
 		}
-	}, [navigate, location, curId, session, setSession]);
+	},[navigate, location, curId, session, setSession]);
 
 	const logButton = () => {
 		return sessionStorage.getItem('login') === 'true' ? (
