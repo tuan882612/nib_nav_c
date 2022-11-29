@@ -1,13 +1,41 @@
-.reg {
+.regBody {
     display: flex;
     min-height: 93.5vh;
     justify-content: center;
+
     background-color: #212529;
     color: rgb(255, 255, 255);
-    
+    font-size: calc(10px + 2vmin);
 }
 
-.reg-header {
-    font-size: calc(10px + 2vmin);
-    margin-top: calc(10px + 30vmin);
+.input {
+    background-color: white;
+    border-radius: 7px;
+}
+
+.regEmail {
+    font-size: 20px;
+    margin-top: 50px;
+    padding: 0%;
+}
+
+.regName {
+    font-size: 20px;
+    padding: 0%;
+}
+
+.regAddress {
+    font-size: 20px;
+    padding: 0%;
+}
+
+.regPassword {
+    font-size: 20px;
+    padding: 0%;
+}
+
+.err {
+    margin: 4px 0 0 0;
+    font-size: 13px;
+    color: #e64646;
 }

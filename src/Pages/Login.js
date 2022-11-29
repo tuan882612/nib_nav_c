@@ -45,7 +45,7 @@ function LoginPage() {
 
 	const { handleSubmit } = useForm();
 
-	const handleCred = () => {
+	const handleCred = (event) => {
 		const body = {
 			email: values.username,
 			password: values.password,
@@ -127,12 +127,21 @@ function LoginPage() {
 						</FormControl>
 					</Box>
 					<StyledBox>
-						<StyledButton sx={{ mt: 5 }}>
+						<StyledButton 
+							sx={{ mt: 5 }}							
+							onClick={() => navigate('/forgotpassword')} 
+							type='button'
+						>
 							forgot password
 						</StyledButton>
 					</StyledBox>
 					<StyledBox>
-						<StyledButton> register </StyledButton>
+						<StyledButton 
+							onClick={() => navigate('/register',{state:{meow:"meow"}})} 
+							type='button'
+						>
+							register 
+						</StyledButton>
 						<StyledButton
 							sx={{ ml: 1 }}
 							type='submit'
