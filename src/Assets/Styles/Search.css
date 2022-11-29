@@ -1,10 +1,11 @@
 .body {
     display: flex;
-    min-height: 93.5vh;
+    height: 100%;
     background-color: #212529;
     color: rgb(255, 255, 255);
     font-size: calc(10px + 2vmin);
     justify-content: center;
+    padding-bottom: 50px;
 }
 
 .mid-body {
@@ -14,6 +15,13 @@
 }
 
 .map-container {
-    width: 30rem;
-    height: 30rem;
+    width: 33rem;
+    height: 33rem;
 }
+
+input:-webkit-autofill,
+.MuiInputBase-root:has(> input:-webkit-autofill) {
+    box-shadow: 0 0 0 30px #212529 inset !important;
+    -webkit-text-fill-color: white;
+}
+
