@@ -4,6 +4,7 @@
     justify-content: center;
     background-color: #212529;
     color: rgb(255, 255, 255);
+    font-size: calc(10px +2vm);
     padding-bottom: 50px;
 }
 

@@ -24,20 +24,13 @@ function NavigationBar() {
 				.get(sUrl + '/verify/' + curId)
 				.then((response) => setSession(true))
 				.catch((error) => {
+					if (sessionStorage.getItem('login') === 'true') {
+						navigate('/login');
+					}
 					sessionStorage.setItem('login', 'false');
 					sessionStorage.setItem('id', '');
-					navigate('/login');
 				});
 		}
-		// else {
-		// 	const curPath = location.pathname
-
-		// 	if (curPath !== '/login' ||
-		// 	 curPath !== '/register' ||
-		// 	 curPath !== '/auth') {
-		// 		navigate('/login')
-		// 	}
-		// }
 	}, [navigate, location, curId, session, setSession]);
 
 	const logButton = () => {
