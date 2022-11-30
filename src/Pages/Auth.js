@@ -45,10 +45,7 @@ function Auth() {
             }
 
             return stateObj
-        })        
-        axios.get('http://localhost:8080/user/get/'+body.email)
-            .then(() => setError({...error, key:"Email already exist please return to login"}))
-        console.log(prop, data, error)
+        })
     }
 
 	const onSubmit = () => {
@@ -73,8 +70,6 @@ function Auth() {
                         });
                     })
                 .catch(error => setError({...error, key:"Enter a valid code or refresh page to for a new code."}))
-        } else {
-
         }
 	};
 

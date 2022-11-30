@@ -11,6 +11,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { styled } from '@mui/material/styles';
+import axios from 'axios';
 
 import '../Assets/Styles/Register.css';
 import { useNavigate } from 'react-router-dom';
@@ -62,7 +63,6 @@ function Register() {
                 res = false
             }
         });
-
         return res
     }
 
@@ -80,7 +80,10 @@ function Register() {
                         stateObj[prop] = "Please enter Email.";
                     } else if (!validateEmail(value)) {
                         stateObj[prop] = "Please enter valid Email.";
-                    }
+                    } else {
+						axios.get('http://localhost:8080/user/get/'+value)
+							.then(() => setError({...error, email:"Email already exist please return to login"}))
+					}
                     break;
                 case "name":
                     if (!value) {

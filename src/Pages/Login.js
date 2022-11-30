@@ -38,31 +38,82 @@ function LoginPage() {
 		password: '',
 		showPassword: false,
 	});
+	const [error, setError] = useState({
+		email: '',
+		password: ''
+	})
 
 	const handleChange = (prop) => (event) => {
-		setValues({ ...values, [prop]: event.target.value });
+		const value = event.target.value
+
+		setValues({ ...values, [prop]: value});
+
+		setError(prev => {
+            const stateObj = { ...prev, [prop]: "" };
+
+            switch (prop) {
+                case "email":
+                    if (!value) {
+                        stateObj[prop] = "Please enter Email.";
+                    }
+                    break;
+                case "password":
+                    if (!value) {
+                        stateObj[prop] = "Please enter Password.";
+                    }
+                    break;
+                default:
+                break;
+            }
+
+            return stateObj;
+        });
 	};
+
+	const handleDefault = () => {
+		if (!values.email) {
+			setError({email:"Please enter Email."})
+		}
+		if (!values.password) {
+			setError({password:"Please enter password."})
+		}
+	}
+
+    const validateError = () => {
+        var res = true
+        Object.keys(error).forEach(element => {
+            if (error[element]) {
+                res = false
+            }
+        });
+
+        return res
+    }
 
 	const { handleSubmit } = useForm();
 
 	const handleCred = (event) => {
+		handleDefault()
+		
 		const body = {
 			email: values.email,
 			password: values.password,
 		};
-
-		axios.post('http://localhost:8080/login/', body)
-		.then((response) => {
-			if (response.status === 200) {
-				sessionStorage.setItem('id', values.email);
-				sessionStorage.setItem('login', 'true');
-				console.log('Valid login');
-				navigate('/home', { replace: true });
-			} else {
-				console.log('Invalid input');
-				navigate('/login');
-			}
-		});
+		
+		if (validateError()) {
+			axios.post('http://localhost:8080/login/', body)
+			.then((response) => {
+				if (response.status === 200) {
+					sessionStorage.setItem('id', values.email);
+					sessionStorage.setItem('login', 'true');
+					console.log('Valid login');
+					navigate('/home', { replace: true });
+				} else {
+					console.log('Invalid input');
+					navigate('/login');
+				}
+			});
+		}
 	};
 
 	return (
@@ -96,6 +147,8 @@ function LoginPage() {
 							/>
 						</FormControl>
 					</Box>
+					<span className='err'>{error.email}</span>
+
 					<p className='loginPassword'>PASSWORD</p>
 					<Box>
 						<FormControl
@@ -133,6 +186,8 @@ function LoginPage() {
 							/>
 						</FormControl>
 					</Box>
+					<span className='err'>{error.password}</span>
+
 					<StyledBox>
 						<StyledButton 
 							sx={{ mt: 5 }}							
@@ -156,12 +211,6 @@ function LoginPage() {
 							login
 						</StyledButton>
 					</StyledBox>
-					{/* <Fade in={onSubmit === true} timeout={4000}>
-					<Alert severity="success">Login Success!</Alert>
-				</Fade>
-				<Fade in={onSubmit === false} timeout={4000}>
-					<Alert severity="error">Invalid Login!</Alert>			
-				</Fade> */}
 				</form>
 			</Box>
 		</Box>
