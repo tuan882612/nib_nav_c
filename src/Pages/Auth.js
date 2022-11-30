@@ -65,7 +65,10 @@ function Auth() {
                                 sessionStorage.setItem('id', body.email);
                                 sessionStorage.setItem('login', 'true');
                                 console.log('Valid login');
-                                navigate('/home', { replace: true });
+                                navigate('/home', { 
+									replace: true, 
+									state:{message:"Registration Successful"}
+								});
                             }
                         });
                     })

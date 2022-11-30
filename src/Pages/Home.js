@@ -19,20 +19,21 @@ function Home() {
 		setTimeout(() => {
 		    setOpen(false);
 		}, 3000);
+		
 	},[])
 
 	return (
 		<div className='body'>
 			<div className='mid-body'>Home</div>
 			<div className='alert-body'>
-				<Collapse in={open && transfer.state} >
+				<Collapse in={open && transfer.state.message} >
 					<Alert
 						sx={{ 
 							mb: 2,
 							width: '100%' 
 						}}
 					>
-						{}
+						{transfer.state.message}
 					</Alert>
 				</Collapse>
 			</div>
