@@ -14,10 +14,12 @@ import CloseIcon from '@mui/icons-material/Close';
 function Home() {
 	const transfer = useLocation();
 	const [open, setOpen] = useState(true);
+	// const [msg, setMsg] = useState(transfer.state.message);
 
 	useEffect(() => {
 		setTimeout(() => {
 		    setOpen(false);
+			// setMsg('')
 		}, 3000);
 	},[])
 
