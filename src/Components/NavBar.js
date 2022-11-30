@@ -15,14 +15,15 @@ function NavigationBar() {
 	const [session, setSession] = useState(false);
 	const navigate = useNavigate();
 	const location = useLocation();
+
 	const sUrl = 'http://localhost:8080';
 	const curId = sessionStorage.getItem('id');
 
 	useEffect(() => {
 		if (sessionStorage.getItem('login')==='true') {
 			axios.get(sUrl + "/verify/" + curId)
-			.then((response) => setSession(true))
-			.catch((error) => {
+			.then(() => setSession(true))
+			.catch(() => {
 				if (sessionStorage.getItem('login')==='true')
 				{
 					navigate('/login')
@@ -61,14 +62,14 @@ function NavigationBar() {
 
 	const navIcon = () => {
 		var i = 0;
-		const navItems = ['home', 'search', 'feedback', 'profile'].map(
-			(route) => (
+		const navItems = ['home', 'search', 'profile']
+			.map((route) => (
 				<Typography
 					key={i++}
 					variant='h6'
 					component='div'
 					sx={{ cursor: 'pointer' }}
-					onClick={() => navigate('/' + route)}
+					onClick={() => navigate('/' + route, {state:{message:''}})}
 				>
 					{route}
 				</Typography>
@@ -78,7 +79,7 @@ function NavigationBar() {
 		return sessionStorage.getItem('login') === 'true' ? (
 			<Box
 				sx={{
-					flexGrow: 0.1,
+					flexGrow: 0.04,
 					display: 'inline-flex',
 					justifyContent: 'space-between',
 				}}

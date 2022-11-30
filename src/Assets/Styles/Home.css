@@ -1,6 +1,5 @@
 .body {
-  display: flex;
-  min-height: 93.5vh;
+  min-height: 90vh;
   background-color: #212529;
   color: rgb(255, 255, 255);
   font-size: calc(10px + 2vmin);
@@ -8,8 +7,15 @@
 }
 
 .mid-body {
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   margin: 50px;
 }
 
+.alert-body {
+  position:absolute; 
+  bottom: 0; 
+  right: 0;
+  margin-bottom: 50px;
+  margin-right: 100px;
+}
