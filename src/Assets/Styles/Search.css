@@ -18,10 +18,3 @@
     width: 33rem;
     height: 33rem;
 }
-
-input:-webkit-autofill,
-.MuiInputBase-root:has(> input:-webkit-autofill) {
-    box-shadow: 0 0 0 30px #212529 inset !important;
-    -webkit-text-fill-color: white;
-}
-
