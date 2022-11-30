@@ -8,6 +8,9 @@
 .profile-contents{
     margin:auto 15rem;
     display: grid;
-    text-align: center;
     line-height: 4rem;
+}
+.main-container{
+    display: block;
+    text-align: center;
 }

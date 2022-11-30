@@ -13,10 +13,10 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import '../Assets/Styles/Login.css';
-import { useNavigate } from 'react-router-dom';
 
 const StyledBox = styled(Box)(() => ({
 	display: 'flex',
@@ -33,35 +33,77 @@ const StyledButton = styled(Button)(() => ({
 
 function LoginPage() {
 	const navigate = useNavigate();
+	const [key, setKey] = useState(0)
 	const [values, setValues] = useState({
-		username: '',
+		email: '',
 		password: '',
 		showPassword: false,
 	});
+	const [error, setError] = useState({
+		email: '',
+		password: ''
+	})
 
 	const handleChange = (prop) => (event) => {
-		setValues({ ...values, [prop]: event.target.value });
+		const value = event.target.value
+
+		setValues({ ...values, [prop]: value });
+
+		setError(prev => {
+            const stateObj = { ...prev, [prop]: "" };
+
+            switch (prop) {
+                case "email":
+                    if (!value) {
+                        stateObj[prop] = "Please enter Email.";
+                    }
+                    break;
+                case "password":
+                    if (!value) {
+                        stateObj[prop] = "Please enter Password.";
+                    }
+                    break;
+                default:
+                	break;
+            }
+
+            return stateObj;
+        });
 	};
+
+    const validateError = () => {
+        var res = true
+        Object.keys(error).forEach(element => {
+            if (error[element]) {
+                res = false
+            }
+        });
+        return res
+    }
 
 	const { handleSubmit } = useForm();
 
 	const handleCred = (event) => {
 		const body = {
-			email: values.username,
+			email: values.email,
 			password: values.password,
 		};
-
-		axios.post('http://localhost:8080/login/', body).then((response) => {
-			if (response.status === 200) {
-				sessionStorage.setItem('id', values.username);
-				sessionStorage.setItem('login', 'true');
-				console.log('Valid login');
-				navigate('/home', { replace: true });
-			} else {
-				console.log('Invalid input');
-				navigate('/login');
-			}
-		});
+		
+		if (validateError()) {
+			axios.post('http://localhost:8080/login/', body)
+				.then((response) => {
+					if (response.status === 200) {
+						sessionStorage.setItem('id', values.email);
+						sessionStorage.setItem('login', 'true');
+						console.log('Valid login');
+						navigate('/home', 
+							{state:{message:"Login Successful"}});
+					} else {
+						console.log('Invalid input');
+						navigate('/login');
+					}
+			});
+		}
 	};
 
 	return (
@@ -88,12 +130,15 @@ function LoginPage() {
 							variant='outlined'
 						>
 							<OutlinedInput
-								type={'username'}
-								value={values.username}
-								onChange={handleChange('username')}
+								type={'name'}
+								value={values.email}
+								placeholder='Enter Email'
+								onChange={handleChange('email')}
 							/>
 						</FormControl>
 					</Box>
+					<span className='err'>{error.email}</span>
+
 					<p className='loginPassword'>PASSWORD</p>
 					<Box>
 						<FormControl
@@ -104,6 +149,7 @@ function LoginPage() {
 							<OutlinedInput
 								type={values.showPassword ? 'text' : 'password'}
 								value={values.password}
+								placeholder='Enter Password'
 								onChange={handleChange('password')}
 								endAdornment={
 									<IconButton
@@ -120,16 +166,14 @@ function LoginPage() {
 										}
 										edge='end'
 									>
-										{values.showPassword ? (
-											<VisibilityOff />
-										) : (
-											<Visibility />
-										)}
+										{values.showPassword ? (<VisibilityOff />) : (<Visibility />)}
 									</IconButton>
 								}
 							/>
 						</FormControl>
 					</Box>
+					<span className='err'>{error.password}</span>
+
 					<StyledBox>
 						<StyledButton 
 							sx={{ mt: 5 }}							
@@ -153,12 +197,6 @@ function LoginPage() {
 							login
 						</StyledButton>
 					</StyledBox>
-					{/* <Fade in={onSubmit === true} timeout={4000}>
-					<Alert severity="success">Login Success!</Alert>
-				</Fade>
-				<Fade in={onSubmit === false} timeout={4000}>
-					<Alert severity="error">Invalid Login!</Alert>			
-				</Fade> */}
 				</form>
 			</Box>
 		</Box>

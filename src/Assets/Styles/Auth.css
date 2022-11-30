@@ -1,13 +1,14 @@
-.auth {
+.authBody {
     display: flex;
     min-height: 93.5vh;
     justify-content: center;
     background-color: #212529;
     color: rgb(255, 255, 255);
-    
+    font-size: calc(10px + 2vmin);
 }
 
-.auth-header {
-    font-size: calc(10px + 2vmin);
-    margin-top: calc(10px + 30vmin);
+.authMsg {
+    font-size: 20px;
+    text-align: center;
+    padding: 0%;
 }

@@ -25,18 +25,12 @@
     padding: 0%;
 }
 
-.regAddress {
-    font-size: 20px;
-    padding: 0%;
-}
-
 .regPassword {
     font-size: 20px;
     padding: 0%;
 }
 
 .err {
-    margin: 4px 0 0 0;
     font-size: 13px;
     color: #e64646;
 }
