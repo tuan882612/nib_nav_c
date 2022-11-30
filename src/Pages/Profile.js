@@ -1,12 +1,4 @@
-import {
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import "../Assets/Styles/Profile.css";
 import { useState } from "react";
 import axios from "axios";
@@ -38,8 +30,13 @@ function Profile() {
       <div className="wrapper-container">
         <div id="profile-header">Profile</div>
         <div className="profile-contents">Name: {values.name}</div>
-
         <div className="profile-contents">Email: {values.email}</div>
+        <Button
+          sx={{ bgcolor: "#5f7470", color: "white", px: "2rem" }}
+          type="submit"
+        >
+          Submit
+        </Button>
       </div>
     </div>
   );
