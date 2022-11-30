@@ -123,15 +123,7 @@ function Search() {
 	const [recipe, setRecipe] = useState('');
 	const [selectedRecipe, setSelectedRecipe] = useState([]);
 	const [recipeList, setRecipeList] = useState([]);
-	const [ingredients, setIngredients] = useState([
-		'butter',
-		'milk',
-		'sugar',
-		'eggs',
-		'dogs',
-		'yogurt',
-		'apples',
-	]);
+	const [ingredients, setIngredients] = useState([]);
 	const [stores, setStores] = useState([]);
 	const [selectedStore, setSelectedStore] = useState([]);
 	const [tab, setTab] = useState(0);
@@ -158,6 +150,8 @@ function Search() {
 			scope: 'product.compact',
 		};
 
+		setTab(0);
+
 		axios
 			.post('https://api-ce.kroger.com/v1/connect/oauth2/token', data, {
 				headers: {
@@ -183,10 +177,7 @@ function Search() {
 					setLatitude(lat);
 					setLongitude(lng);
 
-					if (recipeList.length === 0) {
-						setTab(0);
-						console.log(tab);
-					}
+					setTab(0);
 
 					axios
 						.get(
@@ -221,24 +212,43 @@ function Search() {
 	}, [location, map]);
 
 	useEffect(() => {
-		axios
-			.get(
-				`https://api.spoonacular.com/recipes/${selectedRecipe.id}/information?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&includeNutrition=false`
-			)
-			.then((response) => {
-				setIngredients(response.data.extendedIngredients);
-				if(selectedStore === '')
-		{
-			setTab(1);
+		if (selectedRecipe !== [] && selectedRecipe !== undefined) {
+			axios
+				.get(
+					`https://api.spoonacular.com/recipes/${selectedRecipe.id}/information?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&includeNutrition=false`
+				)
+				.then((response) => {
+					setIngredients(response.data.extendedIngredients);
+					console.log(ingredients);
+				});
 		}
-				console.log(ingredients);
-			});
 	}, [selectedRecipe]);
 
-
 	useEffect(() => {
-		if (selectedStore !== '' && ingredients !== []) {
+		// if (
+		// 	selectedStore !== [] &&
+		// 	ingredients !== [] &&
+		// 	selectedRecipe !== undefined &&
+		// 	ingredients !== undefined &&
+		// 	selectedStore !== undefined &&
+		// 	selectedStore.locationId !== undefined
+		// ) {
+		// 	ingredients.map((ingredient) => {
+		// 		console.log(ingredient.nameClean);
+		// 	});
+		// } else {
+		// 	console.log('hahaha');
+		// }
+		if (
+			selectedStore !== [] &&
+			ingredients !== [] &&
+			selectedRecipe !== undefined &&
+			ingredients !== undefined &&
+			selectedStore !== undefined &&
+			selectedStore.locationId !== undefined
+		) {
 			setPrices([]);
+			setCost(0);
 			ingredients.map((ingredient) => {
 				axios
 					.get(
@@ -251,6 +261,7 @@ function Search() {
 						}
 					)
 					.then((response) => {
+						console.log(response);
 						for (let i = 0; i < response.data.data.length; i++) {
 							if (
 								response.data.data[i].items[0].hasOwnProperty(
@@ -273,15 +284,8 @@ function Search() {
 						}
 					});
 			});
-
-			setTab(2);
-			console.log(prices);
 		}
-	}, [selectedStore, ingredients]);
-
-	useEffect(() => {
-		setCost(0);
-	}, [location, recipe, selectedStore, selectedRecipe]);
+	}, [selectedStore]);
 
 	const options = {
 		closeBoxURL: '',
@@ -315,7 +319,6 @@ function Search() {
 								padding: '30px',
 								borderRadius: '20px',
 								borderBottom: 'none',
-								borderBottom: 'solid',
 								borderWidth: '1px',
 								backgroundColor: '#5f7470',
 								borderBottomLeftRadius: '0px',
@@ -518,7 +521,6 @@ function Search() {
 									}}
 									icon={<MenuBookIcon />}
 									label='Recipes'
-									{...(<div>yo</div>)}
 								/>
 								<Tab
 									sx={{
@@ -548,14 +550,15 @@ function Search() {
 								<StyledRestaurant>
 									{recipeList.map((item) => {
 										return (
-											<Button
+											<ListButton
 												onClick={() => {
 													setSelectedRecipe(item);
+													setTab(1);
 													console.log(selectedRecipe);
 												}}
 											>
 												{item.title}
-											</Button>
+											</ListButton>
 										);
 									})}
 								</StyledRestaurant>
@@ -572,6 +575,7 @@ function Search() {
 											<ListButton
 												onClick={() => {
 													setSelectedStore(item);
+													setTab(2);
 													console.log(selectedStore);
 												}}
 											>
@@ -601,9 +605,6 @@ function Search() {
 											fontSize={'30px'}
 										>
 											Kroger
-										</Typography>
-										<Typography>
-											{/* {selectedStore.address.addressLine1} */}
 										</Typography>
 										<Typography>
 											{
@@ -640,35 +641,42 @@ function Search() {
 											}}
 										>
 											{prices.map((item, index) => {
-												return (
-													<Box
-														sx={{
-															display: 'flex',
-															flexDirection:
-																'row',
-															justifyContent:
-																'space-evenly',
-														}}
-													>
-														<Typography
+												if(index < ingredients.length){
+													return (
+														<Box
 															sx={{
-																display:
-																	'block',
-																color: 'black',
-																flexGrow: '1',
+																display: 'flex',
+																flexDirection:
+																	'row',
+																justifyContent:
+																	'space-evenly',
 															}}
 														>
-															{ingredients[index]}
-														</Typography>
-														<Typography
-															sx={{
-																color: 'black',
-															}}
-														>
-															{item}
-														</Typography>
-													</Box>
-												);
+															<Typography
+																sx={{
+																	display:
+																		'block',
+																	color: 'black',
+																	flexGrow:
+																		'1',
+																}}
+															>
+																{
+																	ingredients[
+																		index
+																	].nameClean
+																}
+															</Typography>
+															<Typography
+																sx={{
+																	color: 'black',
+																}}
+															>
+																{item}
+															</Typography>
+														</Box>
+													);
+												}
 											})}
 										</Box>
 										<Typography>
