@@ -188,14 +188,14 @@ function Search() {
 						console.log(tab);
 					}
 
-					// axios
-					// 	.get(
-					// 		`https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&query=${recipe}&number=10`
-					// 	)
-					// 	.then((response) => {
-					// 		setRecipeList(response.data.results);
-					// 		console.log(response);
-					// 	});
+					axios
+						.get(
+							`https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&query=${recipe}&number=5`
+						)
+						.then((response) => {
+							setRecipeList(response.data.results);
+							console.log(response);
+						});
 
 					console.log('Bearer ' + token);
 
@@ -221,57 +221,20 @@ function Search() {
 	}, [location, map]);
 
 	useEffect(() => {
-		// axios
-		// 	.get(
-		// 		`https://api.spoonacular.com/recipes/${selectedRecipe.id}/information?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&includeNutrition=false`
-		// 	)
-		// 	.then((response) => {
-		// 		setIngredients(response.data.extendedIngredients);
-		//		if(selectedStore === '')
-		// {
-		// 	setTab(1);
-		// }
-		// 		console.log(ingredients);
-		// 	});
+		axios
+			.get(
+				`https://api.spoonacular.com/recipes/${selectedRecipe.id}/information?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&includeNutrition=false`
+			)
+			.then((response) => {
+				setIngredients(response.data.extendedIngredients);
+				if(selectedStore === '')
+		{
+			setTab(1);
+		}
+				console.log(ingredients);
+			});
 	}, [selectedRecipe]);
 
-	// useEffect(() => {
-	// 	setPrices([]);
-	// 	ingredients.map((ingredient) => {
-	// 		axios
-	// 			.get(
-	// 				`https://api-ce.kroger.com/v1/products?filter.term=${ingredient.nameClean}&filter.locationId=03500817`,
-	// 				{
-	// 					headers: {
-	// 						Accept: 'application/json',
-	// 						Authorization: 'Bearer ' + token,
-	// 					},
-	// 				}
-	// 			)
-	// 			.then((response) => {
-	// 				for (let i = 0; i < response.data.data.length; i++) {
-	// 					if (
-	// 						response.data.data[i].items[0].hasOwnProperty(
-	// 							'price'
-	// 						)
-	// 					) {
-	// 						setPrices((prices) => [
-	// 							...prices,
-	// 							response.data.data[i].items[0].price.regular,
-	// 						]);
-	// 						console.log(
-	// 							response.data.data[i].items[0].price.regular
-	// 						);
-	// 						break;
-	// 					}
-	// 				}
-	// 				console.log(prices);
-	// 				console.log(response);
-	// 			});
-	// 	});
-
-	// 	console.log(prices);
-	// }, [ingredient]);
 
 	useEffect(() => {
 		if (selectedStore !== '' && ingredients !== []) {
@@ -279,7 +242,7 @@ function Search() {
 			ingredients.map((ingredient) => {
 				axios
 					.get(
-						`https://api-ce.kroger.com/v1/products?filter.term=${ingredient}&filter.locationId=${selectedStore.locationId}`,
+						`https://api-ce.kroger.com/v1/products?filter.term=${ingredient.nameClean}&filter.locationId=${selectedStore.locationId}`,
 						{
 							headers: {
 								Accept: 'application/json',
