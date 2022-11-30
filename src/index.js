@@ -1,6 +1,6 @@
 import { React, useState, useNavigate, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router,Route,Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, redirect } from 'react-router-dom';
 import './Assets/Styles/index.css';
 
 import NavigationBar from './Components/NavBar';
@@ -14,6 +14,8 @@ import Register from './Pages/Register';
 import Auth from './Pages/Auth';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+
 
 root.render(
 	<Router>

@@ -15,14 +15,15 @@ function NavigationBar() {
 	const [session, setSession] = useState(false);
 	const navigate = useNavigate();
 	const location = useLocation();
+
 	const sUrl = 'http://localhost:8080';
 	const curId = sessionStorage.getItem('id');
 
 	useEffect(() => {
 		if (sessionStorage.getItem('login')==='true') {
 			axios.get(sUrl + "/verify/" + curId)
-			.then((response) => setSession(true))
-			.catch((error) => {
+			.then(() => setSession(true))
+			.catch(() => {
 				if (sessionStorage.getItem('login')==='true')
 				{
 					navigate('/login')
@@ -61,8 +62,8 @@ function NavigationBar() {
 
 	const navIcon = () => {
 		var i = 0;
-		const navItems = ['home', 'search', 'feedback', 'profile'].map(
-			(route) => (
+		const navItems = ['home', 'search', 'feedback', 'profile']
+			.map((route) => (
 				<Typography
 					key={i++}
 					variant='h6'

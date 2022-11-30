@@ -13,10 +13,10 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import '../Assets/Styles/Login.css';
-import { useNavigate } from 'react-router-dom';
 
 const StyledBox = styled(Box)(() => ({
 	display: 'flex',
@@ -33,6 +33,7 @@ const StyledButton = styled(Button)(() => ({
 
 function LoginPage() {
 	const navigate = useNavigate();
+	const [key, setKey] = useState(0)
 	const [values, setValues] = useState({
 		email: '',
 		password: '',
@@ -46,7 +47,7 @@ function LoginPage() {
 	const handleChange = (prop) => (event) => {
 		const value = event.target.value
 
-		setValues({ ...values, [prop]: value});
+		setValues({ ...values, [prop]: value });
 
 		setError(prev => {
             const stateObj = { ...prev, [prop]: "" };
@@ -63,21 +64,12 @@ function LoginPage() {
                     }
                     break;
                 default:
-                break;
+                	break;
             }
 
             return stateObj;
         });
 	};
-
-	const handleDefault = () => {
-		if (!values.email) {
-			setError({email:"Please enter Email."})
-		}
-		if (!values.password) {
-			setError({password:"Please enter password."})
-		}
-	}
 
     const validateError = () => {
         var res = true
@@ -86,15 +78,12 @@ function LoginPage() {
                 res = false
             }
         });
-
         return res
     }
 
 	const { handleSubmit } = useForm();
 
 	const handleCred = (event) => {
-		handleDefault()
-		
 		const body = {
 			email: values.email,
 			password: values.password,
@@ -102,16 +91,16 @@ function LoginPage() {
 		
 		if (validateError()) {
 			axios.post('http://localhost:8080/login/', body)
-			.then((response) => {
-				if (response.status === 200) {
-					sessionStorage.setItem('id', values.email);
-					sessionStorage.setItem('login', 'true');
-					console.log('Valid login');
-					navigate('/home', { replace: true });
-				} else {
-					console.log('Invalid input');
-					navigate('/login');
-				}
+				.then((response) => {
+					if (response.status === 200) {
+						sessionStorage.setItem('id', values.email);
+						sessionStorage.setItem('login', 'true');
+						console.log('Valid login');
+						navigate('/home', );
+					} else {
+						console.log('Invalid input');
+						navigate('/login');
+					}
 			});
 		}
 	};
@@ -176,11 +165,7 @@ function LoginPage() {
 										}
 										edge='end'
 									>
-										{values.showPassword ? (
-											<VisibilityOff />
-										) : (
-											<Visibility />
-										)}
+										{values.showPassword ? (<VisibilityOff />) : (<Visibility />)}
 									</IconButton>
 								}
 							/>

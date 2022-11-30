@@ -51,7 +51,7 @@ function Auth() {
 	const onSubmit = () => {
         if (!error.key) {
             axios.get(baseUrl+'verify/'+parseInt(value.key))
-                .then(response => {            
+                .then(() => {            
                     const data = {
                         email: body.email,
                         password: body.password,
@@ -94,7 +94,6 @@ function Auth() {
                         <FormControl
 							className='input'
 							sx={{ width: '22ch' }}
-                            
 							variant='outlined'
 						>
 							<OutlinedInput
