@@ -97,10 +97,7 @@ function LoginPage() {
 						sessionStorage.setItem('login', 'true');
 						console.log('Valid login');
 						navigate('/home', 
-							{state:{
-								message:"Login Successful"
-							}}
-						);
+							{state:{message:"Login Successful"}});
 					} else {
 						console.log('Invalid input');
 						navigate('/login');

@@ -67,9 +67,7 @@ function Auth() {
                                 console.log('Valid login');
                                 navigate('/home', { 
 									replace: true, 
-									state:{
-										message:"Registration Successful"
-									}
+									state:{message:"Registration Successful"}
 								});
                             }
                         });
