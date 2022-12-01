@@ -155,7 +155,7 @@ function Home() {
 								sx={{
 									mt:'.5rem',
 									ml:'3.75rem',
-									width:'17rem'
+									width:'19.5rem'
 								}}
 							>
 								<p className='feedBack-form-label'>NAME</p>
@@ -172,7 +172,7 @@ function Home() {
 							<FormControl
 								sx={{
 									ml:'3.75rem',
-									width:'17rem',
+									width:'19.5rem',
 								}}
 							>
 								<p className='feedBack-form-label'>COMMENT</p>
@@ -194,7 +194,7 @@ function Home() {
 									bgcolor: '#5f7470',
 									color: 'white',
 									'&:hover': { backgroundColor: '#495A57' },
-									width:'10rem',
+									width:'12.5rem',
 									ml:'7rem',
 									mt:'1.75rem'
 								}}
