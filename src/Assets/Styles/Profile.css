@@ -5,12 +5,12 @@
     padding: 2rem 0rem;
     letter-spacing: 0.3rem;
 }
-.profile-contents{
-    margin:auto 15rem;
-    display: grid;
-    line-height: 4rem;
+.profile-contents {
+  margin: auto 15rem;
+  display: block;
+  line-height: 4rem;
 }
-.main-container{
-    display: block;
-    text-align: center;
+.main-container {
+  display: block;
+  text-align: center;
 }

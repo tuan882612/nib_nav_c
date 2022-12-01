@@ -17,20 +17,19 @@ function Home() {
 
 	useEffect(() => {
 		setTimeout(() => {
-		    setOpen(false);
+			setOpen(false);
 		}, 3000);
-		
-	},[])
+	}, []);
 
 	return (
 		<div className='body'>
 			<div className='mid-body'>Home</div>
 			<div className='alert-body'>
-				<Collapse in={open && transfer.state.message} >
+				<Collapse in={open && transfer.state.message}>
 					<Alert
-						sx={{ 
+						sx={{
 							mb: 2,
-							width: '100%' 
+							width: '100%',
 						}}
 					>
 						{transfer.state.message}
