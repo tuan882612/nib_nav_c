@@ -12,7 +12,7 @@ import Search from './Pages/Search';
 import NotFound from './Pages/NotFound';
 import Register from './Pages/Register';
 import Auth from './Pages/Auth';
-
+import EditProfile from './Pages/EditProfile';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 
@@ -48,6 +48,10 @@ root.render(
 			<Route
                 path='/auth'
                 element={<Auth />}
+            />
+            <Route
+                path='/editprofile'
+                element={<EditProfile />}
             />
             <Route path='/*' element={<NotFound />}/>
         </Routes>

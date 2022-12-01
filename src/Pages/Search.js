@@ -74,7 +74,7 @@ const StyledRestaurant = styled(Box)(() => ({
 
 const StyledReceipt = styled(Box)(() => ({
 	width: '30rem',
-	height: '27.7rem',
+	height: '30rem',
 	color: 'black',
 	backgroundColor: 'white',
 	mb: 2,
@@ -181,7 +181,7 @@ function Search() {
 
 					axios
 						.get(
-							`https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&query=${recipe}&number=5`
+							`https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&query=${recipe}&number=3`
 						)
 						.then((response) => {
 							setRecipeList(response.data.results);
@@ -219,26 +219,13 @@ function Search() {
 				)
 				.then((response) => {
 					setIngredients(response.data.extendedIngredients);
+					setSelectedStore([]);
 					console.log(ingredients);
 				});
 		}
 	}, [selectedRecipe]);
 
 	useEffect(() => {
-		// if (
-		// 	selectedStore !== [] &&
-		// 	ingredients !== [] &&
-		// 	selectedRecipe !== undefined &&
-		// 	ingredients !== undefined &&
-		// 	selectedStore !== undefined &&
-		// 	selectedStore.locationId !== undefined
-		// ) {
-		// 	ingredients.map((ingredient) => {
-		// 		console.log(ingredient.nameClean);
-		// 	});
-		// } else {
-		// 	console.log('hahaha');
-		// }
 		if (
 			selectedStore !== [] &&
 			ingredients !== [] &&
@@ -249,9 +236,9 @@ function Search() {
 		) {
 			setPrices([]);
 			setCost(0);
+			let arr = [];
 			ingredients.map((ingredient) => {
-				axios
-					.get(
+				axios.get(
 						`https://api-ce.kroger.com/v1/products?filter.term=${ingredient.nameClean}&filter.locationId=${selectedStore.locationId}`,
 						{
 							headers: {
@@ -261,29 +248,35 @@ function Search() {
 						}
 					)
 					.then((response) => {
-						console.log(response);
-						for (let i = 0; i < response.data.data.length; i++) {
+						loop: for (
+							let i = 0;
+							i < response.data.data.length;
+							i++
+						) {
 							if (
 								response.data.data[i].items[0].hasOwnProperty(
 									'price'
-								)
+								) &&
+								arr.length < ingredients.length
 							) {
-								setPrices((prices) => [
-									...prices,
-									response.data.data[i].items[0].price
-										.regular,
-								]);
+								arr.push(
+									response.data.data[i].items[0].price.regular
+								);
 								setCost(
 									(cost) =>
 										cost +
 										response.data.data[i].items[0].price
 											.regular
 								);
-								break;
+								// console.log(arr);
+								break loop;
 							}
 						}
 					});
+
+				setPrices(arr);
 			});
+			console.log(cost);
 		}
 	}, [selectedStore]);
 
@@ -641,7 +634,9 @@ function Search() {
 											}}
 										>
 											{prices.map((item, index) => {
-												if(index < ingredients.length){
+												if (
+													index < ingredients.length
+												) {
 													return (
 														<Box
 															sx={{
@@ -672,7 +667,7 @@ function Search() {
 																	color: 'black',
 																}}
 															>
-																{item}
+																{prices[index]}
 															</Typography>
 														</Box>
 													);
@@ -715,27 +710,6 @@ function Search() {
 											THANK YOU!
 										</Typography>
 									</StyledReceipt>
-									<Box sx={{ display: 'flex' }}>
-										<Button
-											sx={{
-												color: 'white',
-												backgroundColor: '#d90429',
-												marginLeft: '3.5rem',
-												width: '30.12rem',
-												borderTopLeftRadius: '0',
-												borderTopRightRadius: '0',
-												border: 'solid',
-												borderWidth: '1px',
-												borderTop: 'none',
-												borderColor: 'black',
-												'&:hover': {
-													backgroundColor: '#9A031C',
-												},
-											}}
-										>
-											Favorite
-										</Button>
-									</Box>
 								</Box>
 							}
 						</TabPanel>

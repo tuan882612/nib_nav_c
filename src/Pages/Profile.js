@@ -1,109 +1,61 @@
 import {
-	Button, TextField,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle
+	Button,
 } from '@mui/material';
 import '../Assets/Styles/Profile.css';
 import { useState } from 'react';
 import axios from 'axios';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function Profile() {	
-	const[open,setOpen] = React.useState(false);
-
-	const handleClickOpen = () => {
-		setOpen(true);
-	}
-
-	const handleClickClose = () => {
-		setOpen(false);
-	}
-
+function Profile() {
 	const [values, setValues] = useState({
-		name:'',
-		email:'',
-		password:''
-	})
+		name: '',
+		email: '',
+		password: '',
+	});
 
-    if (sessionStorage.getItem('login') === 'true') {
-        axios.get('http://localhost:8080/user/get/' + sessionStorage.getItem('id'))
-        .then((response) => {
-			const body = response.data
-			setValues({...values, 
-				name: body.name,
-				email: body.email,
-				password: body.password
-			})
-		});
-    }
+	const navigate = useNavigate();
+
+	if (sessionStorage.getItem('login') === 'true') {
+		axios
+			.get(
+				'http://localhost:8080/user/get/' + sessionStorage.getItem('id')
+			)
+			.then((response) => {
+				const body = response.data;
+				setValues({
+					...values,
+					name: body.name,
+					email: body.email,
+					password: body.password,
+				});
+			});
+	}
 
 	return (
 		<div className='main-container'>
 			<div className='wrapper-container'>
 				<div id='profile-header'>Profile</div>
-				<div className='profile-contents'>Name: <Button
-					sx={{
-						backgroundColor: 'inherit',
-						color: 'white',
-						'&:hover': { backgroundColor: '#495A57' },
-						display: 'inline',
+				<div className='profile-contents'>Name: {values.name}</div>
+				<div className='profile-contents'>Email: {values.email}</div>
+				<Button
+					onClick={() => {
+						navigate('/editprofile',{
+							state:{
+								name:values.name,
+								email:values.email,
+								password:values.password
+							}
+						});
 					}}
-					color='inherit'
-					variant='outlined'
-					onClick={handleClickOpen}
-					
-				>
-					{values.name}
-				</Button>
-				<Dialog open ={open} onClose={handleClickClose}>
-					<DialogTitle>Edit Credentials</DialogTitle>
-					<DialogContent>
-						<DialogContentText>
-							Change Name
-						</DialogContentText>
-						<TextField 
-						autoFocus
-						margin = "dense"
-						id = "Name"
-						label = {values.name}
-						type = "Name"
-						fullWidth
-						variant= "standard"
-						InputProps={{style:{fontSize:30}}}
-						InputLabelProps={{style : {fontSize:30}}}/>
-					</DialogContent>
-				</Dialog></div>
-				<div className='profile-contents'>Email: <Button
 					sx={{
-						backgroundColor: 'inherit',
+						bgcolor: '#5f7470',
 						color: 'white',
-						'&:hover': { backgroundColor: '#495A57' },
-						display: 'inline',
+						px: '2rem',
 					}}
-					color='inherit'
-					variant='outlined'
-					onClick={handleClickOpen}
-					
 				>
-					{values.email}
+					Edit Profile
 				</Button>
-				<Dialog open ={open} onClose={handleClickClose}>
-					<DialogTitle>Edit Credentials</DialogTitle>
-					<DialogContent>
-						<DialogContentText>
-							Change Email
-						</DialogContentText>
-						<TextField 
-						autoFocus
-						margin = "dense"
-						id = "Email"
-						label = {values.email}
-						type = "email"
-						fullWidth
-						variant= "standard"
-						InputProps={{style:{fontSize:30}}}
-						InputLabelProps={{style : {fontSize:30}}}/>
-					</DialogContent>
-				</Dialog></div>
-				
 			</div>
 		</div>
 	);
