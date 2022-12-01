@@ -25,7 +25,7 @@ const StyledButton = styled(Button)(() => ({
 	backgroundColor: '#5f7470',
 	color: 'white',
 	marginBottom: '1rem',
-	width: '25rem',
+	width: '10rem',
 	'&:hover': { backgroundColor: '#495A57' },
 }));
 
@@ -152,23 +152,29 @@ export default function EditProfile() {
 							<span className='err'>{error.password}</span>
 						</FormControl>
 					</div>
-					<StyledButton
-						type='submit'
-						onClick={handleSubmit}
-					>
-						Submit
-					</StyledButton>
-				</form>
 
-				<div>
-					<StyledButton
-						onClick={() => {
-							navigate('/profile');
-						}}
-					>
-						Cancel
-					</StyledButton>
-				</div>
+					<div>
+						<StyledButton
+							type='submit'
+							onClick={handleSubmit}
+							sx={{
+								ml:'1.5rem'
+							}}
+						>
+							Submit
+						</StyledButton>
+						<StyledButton
+							onClick={() => {
+								navigate('/profile');
+							}}
+							sx={{
+								ml:'2rem'
+							}}
+						>
+							Cancel
+						</StyledButton>
+					</div>
+				</form>
 			</Box>
 		</div>
 	);

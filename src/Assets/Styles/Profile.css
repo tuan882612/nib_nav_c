@@ -11,6 +11,13 @@
     line-height: 4rem;
 }
 .main-container{
-    display: block;
+    display: flex;
+    height: 90vh;
+    background-color: #212529;
+    color: rgb(255, 255, 255);
+    font-size: calc(10px + 2vmin);
+    justify-content: center;
+    padding-bottom: 3.2rem;
+    background-color: #212529;
     text-align: center;
 }
