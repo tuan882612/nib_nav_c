@@ -16,10 +16,9 @@ function Home() {
 
 	useEffect(() => {
 		setTimeout(() => {
-		    setOpen(false);
+			setOpen(false);
 		}, 3000);
-		
-	},[])
+	}, []);
 
 	return (
 		<div className='body'>
@@ -69,11 +68,11 @@ function Home() {
 				hi
 			</Box>
 			<div className='alert-body'>
-				<Collapse in={open && transfer.state.message} >
+				<Collapse in={open && transfer.state.message}>
 					<Alert
-						sx={{ 
+						sx={{
 							mb: 2,
-							width: '100%' 
+							width: '100%',
 						}}
 					>
 						{transfer.state.message}
