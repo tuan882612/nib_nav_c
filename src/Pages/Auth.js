@@ -34,7 +34,7 @@ function Auth() {
 
     const handleChange = (prop) => (event) => {
         const data = event.target.value
-
+		
         setValue({...value, [prop]:data})
 
         setError(prev => {
@@ -67,7 +67,10 @@ function Auth() {
                                 console.log('Valid login');
                                 navigate('/home', { 
 									replace: true, 
-									state:{message:"Registration Successful"}
+									state:{
+										message:"Registration Successful",
+										type:"success"
+									}
 								});
                             }
                         });

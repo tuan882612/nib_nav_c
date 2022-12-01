@@ -85,9 +85,10 @@ export default function EditProfile() {
 						stateObj[prop] = 'Duplicate Email.';
 					} else if (!validateEmail(value)) {
                         stateObj[prop] = "Please enter valid Email.";
-                    }
-					axios.get('http://localhost:8080/user/get/'+value)
-						.then(() => setError({...error, email:'Email already exist.'}))
+                    } else {
+						axios.get('http://localhost:8080/user/get/'+value)
+							.then(() => setError({...error, email:'Email already exist.'}))
+					}
 					break;
 				case 'name':
 					if (!value) {
@@ -111,13 +112,10 @@ export default function EditProfile() {
 		});
 	};
 
-	const buildTextFields = () => {
-		const body = {
-			name: values.name,
-			email: values.email,
-			password: values.password,
-		};
-		console.log(body)
+	const buildTextFields = () => {		
+		if (validateError()) {
+			console.log(values)
+		}
 	};
 
 	return (
@@ -154,16 +152,14 @@ export default function EditProfile() {
 							<span className='err'>{error.password}</span>
 						</FormControl>
 					</div>
-					
-				</form>
-				<div>
 					<StyledButton
 						type='submit'
 						onClick={handleSubmit}
 					>
 						Submit
 					</StyledButton>
-				</div>
+				</form>
+
 				<div>
 					<StyledButton
 						onClick={() => {
