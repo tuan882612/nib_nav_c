@@ -142,8 +142,8 @@ function Home() {
 					<Box
 						sx={{
 							bgcolor: '#2E3837', 
-							height: '31.5rem',
-							width:'24.35rem',
+							height: '35rem',
+							width:'27rem',
 							borderBottomLeftRadius: '15px',
 							borderBottomRightRadius: '15px',
 							borderColor: 'white',
@@ -218,7 +218,7 @@ function Home() {
 					mt:25,
 				}} 
 			>
-				hi
+				{}
 			</Box>
 			<div className='alert-body'>
 				<Collapse in={open && transfer.state.message && transfer.state.type}>
