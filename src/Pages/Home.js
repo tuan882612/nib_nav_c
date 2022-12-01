@@ -1,15 +1,14 @@
 import '../Assets/Styles/Home.css';
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import Map from './Search';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { styled } from '@mui/material/styles';
 import CheckSession from '../utils/UserUtilities';
 
 import Alert from '@mui/material/Alert';
-import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import Button from '@mui/material/Button';
-import CloseIcon from '@mui/icons-material/Close';
 
 function Home() {
 	const transfer = useLocation();
@@ -24,7 +23,51 @@ function Home() {
 
 	return (
 		<div className='body'>
-			<div className='mid-body'>Home</div>
+			<h3 className='home-header'>
+				Home
+			</h3>
+			<Box 
+				sx={{
+					bgcolor: '#5f7470', 
+					height: '60vh',
+					width:'40vh',
+					borderRadius: '16px',
+					border: '1px solid',
+					borderColor: 'white',
+					mt:25,
+					mr:15
+				}}
+			>
+				<p className='feedback-header'>
+					feedback
+				</p>
+				<Box
+					sx={{
+						bgcolor: '#2E3837', 
+						height: '52vh',
+						width:'39.9vh',
+						borderBottomLeftRadius: '15px',
+						borderBottomRightRadius: '15px',
+						border: '1px solid',
+						borderColor: 'white',
+					}}
+				>
+					
+				</Box>
+			</Box>
+			<Box 
+				sx={{ 
+					bgcolor: '#5f7470', 
+					height: '60vh',
+					width:'30vh',
+					borderRadius: '16px',
+					border: '1px solid',
+					borderColor: 'white',
+					mt:25,
+				}} 
+			>
+				hi
+			</Box>
 			<div className='alert-body'>
 				<Collapse in={open && transfer.state.message} >
 					<Alert
