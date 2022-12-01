@@ -9,7 +9,6 @@ import {
 import "./Assets/Styles/index.css";
 
 import NavigationBar from "./Components/NavBar";
-import Feedback from "./Pages/Feedback";
 import Home from "./Pages/Home";
 import LoginPage from "./Pages/Login";
 import Profile from "./Pages/Profile";
@@ -26,7 +25,6 @@ root.render(
     <Routes>
       <Route path="/home" element={<Home />} />
       <Route path="/search" element={<Search />} />
-      <Route path="/feedback" element={<Feedback />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<Register />} />
