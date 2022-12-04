@@ -3,8 +3,6 @@ import {
 	OutlinedInput,
 	FormControl,
 	Button,
-	Fade,
-	Alert,
 	Typography,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
@@ -32,7 +30,7 @@ function Auth() {
             .then(response => {
 				console.log('auth sent to email', response.status)
 				setCode(response.status)
-			}).catch(error => setCode(error.response.status))       
+			}).catch(error => setCode(error.response.status))
     },[body.email])
 
 	console.log(code)
@@ -64,9 +62,8 @@ function Auth() {
 
 					if (code === 201) {
 						axios.post('http://localhost:8080/user/create', body)
-							.then((response) => {
-								console.log('good')
-							}).catch(error => console.log(error.response.status))
+							.then()
+							.catch(error => console.log(error.response.status))
 					}
             
                     axios.post('http://localhost:8080/login/', data)

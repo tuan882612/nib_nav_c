@@ -44,6 +44,14 @@ function LoginPage() {
 		password: '',
 	});
 
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    };
+
 	const handleChange = (prop) => (event) => {
 		const value = event.target.value;
 
@@ -56,6 +64,8 @@ function LoginPage() {
 				case 'email':
 					if (!value) {
 						stateObj[prop] = 'Please enter Email.';
+					} else if (!validateEmail(value)) {
+                        stateObj[prop] = "Please enter valid Email.";
 					}
 					break;
 				case 'password':
@@ -70,6 +80,8 @@ function LoginPage() {
 			return stateObj;
 		});
 	};
+
+
 
 	const validateError = () => {
 		var res = true;
@@ -88,13 +100,13 @@ function LoginPage() {
 			email: values.email,
 			password: values.password,
 		};
-
+		axios.get('http://localhost:8080/user/get/'+values.email)
+			.then()
+			.catch(() => setError({...error, email:"Email does not exist please register."}))
 		if (validateError()) {
 			axios.post('http://localhost:8080/login/', body)
 				.then((response) => {
 					if (response.status === 200) {
-						sessionStorage.setItem('id', values.email);
-						sessionStorage.setItem('login', 'true');
 						console.log('Valid login');
 						navigate('/auth', {state:body});
 					} else {
