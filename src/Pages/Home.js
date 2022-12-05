@@ -113,7 +113,7 @@ function Home() {
 	return (
 		<div className='body'>
 			<Typography
-				variant='h2'
+				variant='h3'
 				sx={{
 					textAlign: 'center',
 					mt:'3.5rem',
@@ -131,8 +131,8 @@ function Home() {
 						borderRadius: '16px',
 						border: '1px solid',
 						borderColor: 'white',
-						mt:'12.5rem',
-						mr:'3rem',
+						mt:'19vh',
+						mr:'3vh',
 					}}
 					
 				>
@@ -142,8 +142,8 @@ function Home() {
 					<Box
 						sx={{
 							bgcolor: '#2E3837', 
-							height: '35rem',
-							width:'27rem',
+							height: '51.7vh',
+							width:'40vh',
 							borderBottomLeftRadius: '15px',
 							borderBottomRightRadius: '15px',
 							borderColor: 'white',
@@ -155,7 +155,7 @@ function Home() {
 								sx={{
 									mt:'.5rem',
 									ml:'3.75rem',
-									width:'19.5rem'
+									width:'27.5vh'
 								}}
 							>
 								<p className='feedBack-form-label'>NAME</p>
@@ -172,7 +172,7 @@ function Home() {
 							<FormControl
 								sx={{
 									ml:'3.75rem',
-									width:'19.5rem',
+									width:'27.5vh',
 								}}
 							>
 								<p className='feedBack-form-label'>COMMENT</p>
@@ -194,9 +194,9 @@ function Home() {
 									bgcolor: '#5f7470',
 									color: 'white',
 									'&:hover': { backgroundColor: '#495A57' },
-									width:'12.5rem',
-									ml:'7rem',
-									mt:'1.75rem'
+									width:'15vh',
+									ml:'12.5vh',
+									mt:'3vh'
 								}}
 								type='submit'
 							>
@@ -215,7 +215,7 @@ function Home() {
 					borderRadius: '16px',
 					border: '1px solid',
 					borderColor: 'white',
-					mt:25,
+					mt:'19vh',
 				}} 
 			>
 				{}
