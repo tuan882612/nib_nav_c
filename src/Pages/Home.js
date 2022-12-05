@@ -156,7 +156,7 @@ function Home() {
 							borderBottomRightRadius: '15px',
 							borderColor: 'white',
 						}}
-						 onSubmit={handleSubmit(onSubmit)}
+						onSubmit={handleSubmit(onSubmit)}
 					>
 						<form>
 							<FormControl

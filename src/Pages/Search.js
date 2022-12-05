@@ -21,8 +21,6 @@ import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import { Buffer } from 'buffer';
-import { useNavigate } from 'react-router-dom';
-import CheckSession from '../utils/UserUtilities';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
@@ -238,7 +236,8 @@ function Search() {
 			setCost(0);
 			let arr = [];
 			ingredients.map((ingredient) => {
-				axios.get(
+				axios
+					.get(
 						`https://api-ce.kroger.com/v1/products?filter.term=${ingredient.nameClean}&filter.locationId=${selectedStore.locationId}`,
 						{
 							headers: {
@@ -248,11 +247,7 @@ function Search() {
 						}
 					)
 					.then((response) => {
-						loop: for (
-							let i = 0;
-							i < response.data.data.length;
-							i++
-						) {
+						for (let i = 0; i < response.data.data.length; i++) {
 							if (
 								response.data.data[i].items[0].hasOwnProperty(
 									'price'
@@ -268,15 +263,29 @@ function Search() {
 										response.data.data[i].items[0].price
 											.regular
 								);
-								// console.log(arr);
-								break loop;
+								break;
 							}
 						}
 					});
-
 				setPrices(arr);
 			});
-			console.log(cost);
+
+			axios
+				.get(
+					'http://localhost:8080/user/get/' +
+						sessionStorage.getItem('id')
+				)
+				.then((response) => {
+					response.data.order.push({
+						recipe: selectedRecipe.title,
+						store: selectedStore.name,
+						cost: cost.toFixed(2).toString(),
+					});
+					axios.put(
+						'http://localhost:8080/user/update/order',
+						response.data
+					);
+				});
 		}
 	}, [selectedStore]);
 
