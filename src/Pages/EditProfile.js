@@ -3,6 +3,7 @@ import {
 	Box,
 	OutlinedInput,
 	FormControl,
+	Typography
 } from '@mui/material';
 import '../Assets/Styles/EditProfile.css';
 import { useState, useEffect } from 'react';
@@ -25,7 +26,7 @@ const StyledButton = styled(Button)(() => ({
 	backgroundColor: '#5f7470',
 	color: 'white',
 	marginBottom: '1rem',
-	width: '25rem',
+	width: '10rem',
 	'&:hover': { backgroundColor: '#495A57' },
 }));
 
@@ -85,9 +86,10 @@ export default function EditProfile() {
 						stateObj[prop] = 'Duplicate Email.';
 					} else if (!validateEmail(value)) {
                         stateObj[prop] = "Please enter valid Email.";
-                    }
-					axios.get('http://localhost:8080/user/get/'+value)
-						.then(() => setError({...error, email:'Email already exist.'}))
+                    } else {
+						axios.get('http://localhost:8080/user/get/'+value)
+							.then(() => setError({...error, email:'Email already exist.'}))
+					}
 					break;
 				case 'name':
 					if (!value) {
@@ -111,19 +113,26 @@ export default function EditProfile() {
 		});
 	};
 
-	const buildTextFields = () => {
-		const body = {
-			name: values.name,
-			email: values.email,
-			password: values.password,
-		};
-		console.log(body)
+	const buildTextFields = () => {		
+		if (validateError()) {
+			console.log(values)
+		}
 	};
 
 	return (
 		<div className='body' onSubmit={handleSubmit(buildTextFields)}>
 			<Box className='form-styler'>
-				<div className='edit-header'>Edit Profile</div>
+				<Typography
+					align="center"
+					variant='h3'
+					sx={{
+						mt:'5vh',
+						mb:'4vh',
+						
+					}}
+				>
+					Edit Profile
+				</Typography>
 				<form>
 					<div>
 						<FormControl>
@@ -154,25 +163,23 @@ export default function EditProfile() {
 							<span className='err'>{error.password}</span>
 						</FormControl>
 					</div>
-					
+
+					<div>
+						<StyledButton
+							type='submit'
+							onClick={handleSubmit}
+							sx={{ml:'1.7rem'}}
+						>
+							Submit
+						</StyledButton>
+						<StyledButton
+							onClick={() => navigate('/profile')}
+							sx={{ml:'1.7rem'}}
+						>
+							Cancel
+						</StyledButton>
+					</div>
 				</form>
-				<div>
-					<StyledButton
-						type='submit'
-						onClick={handleSubmit}
-					>
-						Submit
-					</StyledButton>
-				</div>
-				<div>
-					<StyledButton
-						onClick={() => {
-							navigate('/profile');
-						}}
-					>
-						Cancel
-					</StyledButton>
-				</div>
 			</Box>
 		</div>
 	);

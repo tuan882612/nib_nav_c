@@ -181,7 +181,7 @@ function Search() {
 
 					axios
 						.get(
-							`https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&query=${recipe}&number=3`
+							`https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}&query=${recipe}&number=15`
 						)
 						.then((response) => {
 							setRecipeList(response.data.results);

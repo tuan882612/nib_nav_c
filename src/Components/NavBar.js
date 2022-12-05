@@ -73,7 +73,7 @@ function NavigationBar() {
 					onClick={() => navigate('/' + route, {state:{message:''}})}
 
 				>
-					{route}
+					{route.toUpperCase()}
 				</Typography>
 			)
 		);

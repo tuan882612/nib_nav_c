@@ -3,8 +3,6 @@ import {
 	OutlinedInput,
 	FormControl,
 	Button,
-	Fade,
-	Alert,
 	Typography,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
@@ -25,16 +23,21 @@ function Auth() {
 
 	const [value, setValue] = useState({key:''});
     const [error, setError] = useState({key:''});
+	const [code, setCode] = useState(0)
 
     useEffect(() => {
         axios.post(baseUrl+'generate/'+body.email)
-            .then(console.log('auth sent to email'))        
+            .then(response => {
+				console.log('auth sent to email', response.status)
+				setCode(response.status)
+			}).catch(error => setCode(error.response.status))
     },[body.email])
 
+	console.log(code)
 
     const handleChange = (prop) => (event) => {
         const data = event.target.value
-
+		
         setValue({...value, [prop]:data})
 
         setError(prev => {
@@ -57,7 +60,11 @@ function Auth() {
                         password: body.password,
                     };
 
-                    axios.post('http://localhost:8080/user/create', body)
+					if (code === 201) {
+						axios.post('http://localhost:8080/user/create', body)
+							.then()
+							.catch(error => console.log(error.response.status))
+					}
             
                     axios.post('http://localhost:8080/login/', data)
                         .then((response) => {
@@ -65,14 +72,19 @@ function Auth() {
                                 sessionStorage.setItem('id', body.email);
                                 sessionStorage.setItem('login', 'true');
                                 console.log('Valid login');
+								
                                 navigate('/home', { 
 									replace: true, 
-									state:{message:"Registration Successful"}
+									state:{
+										message:(code === 201)?
+											"Registration Successful":"Login Successful",
+										type:"success"
+									}
 								});
                             }
                         });
                     })
-                .catch(error => setError({...error, key:"Enter a valid code or refresh page to for a new code."}))
+                .catch(error => {setError({...error, key:"Enter a valid code or refresh page to for a new code."})})
         }
 	};
 
@@ -131,12 +143,6 @@ function Auth() {
 							submit
 						</Button>
 					</Box>
-					{/* <Fade in={onSubmit === true} timeout={4000}>
-					<Alert severity="success">Login Success!</Alert>
-				</Fade>
-				<Fade in={onSubmit === false} timeout={4000}>
-					<Alert severity="error">Invalid Login!</Alert>			
-				</Fade> */}
 				</form>
 			</Box>
 		</Box>
