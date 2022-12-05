@@ -26,13 +26,11 @@ function Home() {
 	const navigate = useNavigate();
 	const { handleSubmit } = useForm();
 
-	const [open, setOpen] = useState(true);	
+	const [open, setOpen] = useState(true);
 
-	useEffect(() => {
-		setTimeout(() => {
-			setOpen(false);
-		}, 3000);
-	}, [transfer]);
+	const [header, setHeader] = useState({
+		name:''
+	});
 
 	const [values, setValues] = useState({
 		name:'',
@@ -43,6 +41,16 @@ function Home() {
 		name:'',
 		comment:''
 	})
+	
+	useEffect(() => {
+		axios.get(
+			'http://localhost:8080/user/get/'+
+			sessionStorage.getItem('id')
+		).then(response => setHeader({...values, name:response.data.name}))
+		setTimeout(() => {
+			setOpen(false);
+		}, 3000);
+	}, [transfer, values]);
 
 	const handleChange = (prop) => (event) => {
 		const value = event.target.value
@@ -120,7 +128,7 @@ function Home() {
 					position: 'absolute'
 				}}
 			>
-				Welcome to Nib-Nav
+				Welcome back {header.name}
 			</Typography>
 			<Box>
 				<Box 
@@ -236,5 +244,22 @@ function Home() {
 		</div>
 	);
 }
+
+
+/*
+
+
+function sampleOperation() {
+	axios.get(Url+sessionId)
+		.then(res => { 
+			axios.put(
+				Url, 
+				res.data.order.append(body)
+			);
+		});
+}
+
+
+*/
 
 export default Home;

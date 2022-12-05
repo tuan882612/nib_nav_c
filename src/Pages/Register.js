@@ -149,7 +149,7 @@ function Register() {
 				</Typography>
 				<form>
 					<Box>
-						<p className='regEmail'>EMAIL</p>
+						<p className='test-header'>EMAIL</p>
 						<FormControl
 							className='input'
 							sx={{ width: '25ch' }}

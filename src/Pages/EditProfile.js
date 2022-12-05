@@ -134,6 +134,7 @@ export default function EditProfile() {
 					Edit Profile
 				</Typography>
 				<form>
+					<p className='text-header'>NAME</p>
 					<div>
 						<FormControl>
 							<StyledInput
@@ -144,6 +145,7 @@ export default function EditProfile() {
 						</FormControl>
 					</div>
 					
+					<p className='text-header'>EMAIL</p>
 					<div>
 						<FormControl>
 							<StyledInput
@@ -154,6 +156,7 @@ export default function EditProfile() {
 						</FormControl>
 					</div>
 					
+					<p className='text-header'>PASSWORD</p>
 					<div>
 						<FormControl>
 							<StyledInput
@@ -164,7 +167,7 @@ export default function EditProfile() {
 						</FormControl>
 					</div>
 
-					<div>
+					<Box sx={{mt:'3vh'}}>
 						<StyledButton
 							type='submit'
 							onClick={handleSubmit}
@@ -178,7 +181,7 @@ export default function EditProfile() {
 						>
 							Cancel
 						</StyledButton>
-					</div>
+					</Box>
 				</form>
 			</Box>
 		</div>
