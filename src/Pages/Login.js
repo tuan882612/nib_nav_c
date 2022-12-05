@@ -33,7 +33,7 @@ const StyledButton = styled(Button)(() => ({
 
 function LoginPage() {
 	const navigate = useNavigate();
-	const [key, setKey] = useState(0)
+	const [key, setKey] = useState(0);
 	const [values, setValues] = useState({
 		email: '',
 		password: '',
@@ -41,68 +41,79 @@ function LoginPage() {
 	});
 	const [error, setError] = useState({
 		email: '',
-		password: ''
-	})
+		password: '',
+	});
+
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    };
 
 	const handleChange = (prop) => (event) => {
-		const value = event.target.value
+		const value = event.target.value;
 
 		setValues({ ...values, [prop]: value });
 
-		setError(prev => {
-            const stateObj = { ...prev, [prop]: "" };
+		setError((prev) => {
+			const stateObj = { ...prev, [prop]: '' };
 
-            switch (prop) {
-                case "email":
-                    if (!value) {
-                        stateObj[prop] = "Please enter Email.";
-                    }
-                    break;
-                case "password":
-                    if (!value) {
-                        stateObj[prop] = "Please enter Password.";
-                    }
-                    break;
-                default:
-                	break;
-            }
+			switch (prop) {
+				case 'email':
+					if (!value) {
+						stateObj[prop] = 'Please enter Email.';
+					} else if (!validateEmail(value)) {
+                        stateObj[prop] = "Please enter valid Email.";
+					}
+					break;
+				case 'password':
+					if (!value) {
+						stateObj[prop] = 'Please enter Password.';
+					}
+					break;
+				default:
+					break;
+			}
 
-            return stateObj;
-        });
+			return stateObj;
+		});
 	};
 
-    const validateError = () => {
-        var res = true
-        Object.keys(error).forEach(element => {
-            if (error[element]) {
-                res = false
-            }
-        });
-        return res
-    }
+
+
+	const validateError = () => {
+		var res = true;
+		Object.keys(error).forEach((element) => {
+			if (error[element]) {
+				res = false;
+			}
+		});
+		return res;
+	};
 
 	const { handleSubmit } = useForm();
 
-	const handleCred = (event) => {
+	const handleCred = () => {
 		const body = {
 			email: values.email,
 			password: values.password,
 		};
-		
+		axios.get('http://localhost:8080/user/get/'+values.email)
+			.then()
+			.catch(() => setError({...error, email:"Email does not exist please register."}))
 		if (validateError()) {
 			axios.post('http://localhost:8080/login/', body)
 				.then((response) => {
 					if (response.status === 200) {
-						sessionStorage.setItem('id', values.email);
-						sessionStorage.setItem('login', 'true');
 						console.log('Valid login');
-						navigate('/home', 
-							{state:{message:"Login Successful"}});
+						navigate('/auth', {state:body});
 					} else {
 						console.log('Invalid input');
 						navigate('/login');
 					}
-			});
+				});
 		}
 	};
 
@@ -166,7 +177,11 @@ function LoginPage() {
 										}
 										edge='end'
 									>
-										{values.showPassword ? (<VisibilityOff />) : (<Visibility />)}
+										{values.showPassword ? (
+											<VisibilityOff />
+										) : (
+											<Visibility />
+										)}
 									</IconButton>
 								}
 							/>
@@ -175,20 +190,24 @@ function LoginPage() {
 					<span className='err'>{error.password}</span>
 
 					<StyledBox>
-						<StyledButton 
-							sx={{ mt: 5 }}							
-							onClick={() => navigate('/forgotpassword')} 
+						<StyledButton
+							sx={{ mt: 5 }}
+							onClick={() => navigate('/forgotpassword')}
 							type='button'
 						>
 							forgot password
 						</StyledButton>
 					</StyledBox>
 					<StyledBox>
-						<StyledButton 
-							onClick={() => navigate('/register',{state:{meow:"meow"}})} 
+						<StyledButton
+							onClick={() =>
+								navigate('/register', {
+									state: { meow: 'meow' },
+								})
+							}
 							type='button'
 						>
-							register 
+							register
 						</StyledButton>
 						<StyledButton
 							sx={{ ml: 1 }}

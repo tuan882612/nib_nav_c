@@ -21,7 +21,7 @@
 }
 
 .name input {
-    max-width: 200px;
+    max-width: 15rem;
 } 
 
 .email {
@@ -29,7 +29,7 @@
 }
 
 .email input {
-    max-width: 200px;
+    max-width: 15rem;
 }
 
 .comment {
@@ -37,8 +37,8 @@
 }
 
 .comment textarea {
-    min-height: 400px;
-    min-width: 500px;
+    min-height: 20rem;
+    min-width: 24rem;
     resize: none;
     font-family: inherit;
 }

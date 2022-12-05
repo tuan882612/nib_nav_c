@@ -1,6 +1,6 @@
 .authBody {
     display: flex;
-    min-height: 93.5vh;
+    min-height: 95vh;
     justify-content: center;
     background-color: #212529;
     color: rgb(255, 255, 255);
@@ -8,7 +8,7 @@
 }
 
 .authMsg {
-    font-size: 20px;
+    font-size: 1.2rem;
     text-align: center;
     padding: 0%;
 }

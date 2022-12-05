@@ -1,4 +1,5 @@
 import MenuIcon from '@mui/icons-material/Menu';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import {
 	AppBar,
 	Box,
@@ -70,8 +71,9 @@ function NavigationBar() {
 					component='div'
 					sx={{ cursor: 'pointer' }}
 					onClick={() => navigate('/' + route, {state:{message:''}})}
+
 				>
-					{route}
+					{route.toUpperCase()}
 				</Typography>
 			)
 		);
