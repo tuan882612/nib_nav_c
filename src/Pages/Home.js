@@ -143,15 +143,10 @@ function Home() {
 	};
 
 	useEffect(() => {
-		axios
-			.get(
-				'http://localhost:8080/user/get/' + sessionStorage.getItem('id')
-			)
+		axios.get('http://localhost:8080/user/get/' + sessionStorage.getItem('id'))
 			.then((response) => {
 				setOrders(response.data.order);
 			});
-
-		
 	}, []);
 
 	return (
@@ -172,20 +167,12 @@ function Home() {
 					height: 100,
 				}}
 			>
-				<a
-					href='https://www.kroger.com/'
-					target='_blank'
-				>
-					<img
-						src={require('../Assets/Pictures/amazon-logo.png')}
-					></img>
-				</a>
 			</Box>
 			<Box>
 				<Box
 					sx={{
 						bgcolor: '#5f7470',
-						height: '36.3rem',
+						height: '36.5rem',
 						width: '24.25rem',
 						borderRadius: '16px',
 						border: '1px solid',
@@ -202,7 +189,7 @@ function Home() {
 							mt: '1rem',
 						}}
 					>
-						feedback
+						FEEDBACK
 					</Box>
 					<Box
 						sx={{
@@ -272,7 +259,7 @@ function Home() {
 				sx={{
 					bgcolor: '#5f7470',
 					height: '60vh',
-					width: '30vh',
+					width: '40vh',
 					borderRadius: '16px',
 					border: '1px solid',
 					borderColor: 'white',
@@ -282,20 +269,22 @@ function Home() {
 					alignItems: 'center',
 				}}
 			>
-				<Typography
-					variant='h5'
+				<Box
 					sx={{
 						textAlign: 'center',
-						mt: '0.3rem',
+						alignContent: 'center',
+						fontSize: '22px',
+						mt: '1rem',
+						mb: '-.4rem'
 					}}
 				>
-					Order History
-				</Typography>
+					ORDER HISTORY
+				</Box>
 				<Box
 					sx={{
 						bgcolor: '#2E3837',
 						height: '52.5vh',
-						width: '30vh',
+						width: '40vh',
 						borderRadius: '16px',
 						borderTopLeftRadius: '0',
 						borderTopRightRadius: '0',
@@ -307,18 +296,15 @@ function Home() {
 					}}
 				>
 					{orders.map((item, index) => {
-						if (index < 10) {
-							return (
-								<ListButton>
-									{'Recipe: ' +
-										item.recipe +
-										' Store: ' +
-										item.store +
-										' Cost: ' +
-										item.cost}
-								</ListButton>
-							);
-						}
+						return (
+							<ListButton>
+								{
+									'Recipe: '+item.recipe+'\n'+
+									'Store: ' +item.store +'\n'+
+									'Cost: '  +item.cost
+								}
+							</ListButton>
+						);
 					})}
 				</Box>
 			</Box>

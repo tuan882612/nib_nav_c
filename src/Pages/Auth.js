@@ -51,9 +51,9 @@ function Auth() {
 			case 'register':
 				return "Succesful Registered"
 			case 'login':
-				return "Succesful Logged in"
+				return "Succesful Logged In"
 			case 'edit':
-				return "Succesful updated user info"
+				return "Succesful Updated Profile"
 			default:
 				break;
 		}
