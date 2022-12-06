@@ -69,13 +69,11 @@ function Auth() {
 					}
 
 					if (body.type === 'register') {
-						axios.post('http://localhost:8080/user/create', {
-							email: body.email,
-							name: body.name,
-							password: body.password,
-						}).then()
-						.catch(error => console.log('couldnt create user'))
-					} else if (body.type === 'edit') {
+						axios.post('http://localhost:8080/user/create', body.prev)
+							.then()
+							.catch(error => console.log('couldnt create user'))
+					} 
+					if (body.type === 'edit') {
 						axios.put('http://localhost:8080/user/update', {
 							email: body.prev.email,
 							name: body.prev.name,

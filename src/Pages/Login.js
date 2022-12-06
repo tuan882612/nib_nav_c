@@ -20,7 +20,7 @@ const StyledBox = styled(Box)(() => ({
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center',
-	marginTop: '10px',
+	marginTop: '30px',
 }));
 
 const StyledButton = styled(Button)(() => ({
@@ -201,16 +201,6 @@ function LoginPage() {
 						</FormControl>
 					</Box>
 					<span className='err'>{error.password}</span>
-
-					<StyledBox>
-						<StyledButton
-							sx={{ mt: 5 }}
-							onClick={() => navigate('/forgotpassword')}
-							type='button'
-						>
-							forgot password
-						</StyledButton>
-					</StyledBox>
 					<StyledBox>
 						<StyledButton
 							onClick={() =>

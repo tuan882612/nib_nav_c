@@ -26,21 +26,6 @@ const ListButton = styled(Box)(() => ({
 	'&:hover': { backgroundColor: '#495A57' },
 }));
 
-const ads = [
-	{
-		link: 'https://www.kroger.com/',
-		picture: '../Assets/Pictures/kroger-logo.png',
-	},
-	{
-		link: 'https://www.amazon.com/',
-		picture: '../Assets/Pictures/amazon-logo.png',
-	},
-	{
-		link: 'https://spoonacular.com/',
-		picture: '../Assets/Pictures/spoonacular-logo.svg',
-	},
-];
-
 function Home() {
 	const transfer = useLocation();
 	const navigate = useNavigate();
@@ -64,13 +49,11 @@ function Home() {
 	});
 
 	useEffect(() => {
-		axios
-			.get(
-				'http://localhost:8080/user/get/' + sessionStorage.getItem('id')
-			)
-			.then((response) =>
+		axios.get('http://localhost:8080/user/get/' + sessionStorage.getItem('id'))
+			.then((response) => {
 				setHeader({ ...values, name: response.data.name })
-			);
+				setOrders(response.data.order);
+			});
 		setTimeout(() => {
 			setOpen(false);
 		}, 3000);
@@ -99,6 +82,27 @@ function Home() {
 			return stateObj;
 		});
 	};
+
+	const generateOrder = () => {
+		var orderList = orders
+
+		if (orders.length > 10) {
+			orderList = orders.splice(orders.length-10,)
+		}
+
+		orderList.map((item) => {
+			return (
+				<ListButton>
+					<Typography sx={{fontSize:'12px'}}>
+						{'Recipe: '+item.recipe}
+					</Typography>
+					<Typography sx={{fontSize:'12px'}}>
+						{'Store: ' +item.store}
+					</Typography>
+				</ListButton>
+			);
+		})
+	}
 
 	const validateError = () => {
 		var res = true;
@@ -142,13 +146,6 @@ function Home() {
 		}
 	};
 
-	useEffect(() => {
-		axios.get('http://localhost:8080/user/get/' + sessionStorage.getItem('id'))
-			.then((response) => {
-				setOrders(response.data.order);
-			});
-	}, []);
-
 	return (
 		<div className='body'>
 			<Typography
@@ -172,8 +169,8 @@ function Home() {
 				<Box
 					sx={{
 						bgcolor: '#5f7470',
-						height: '36.5rem',
-						width: '24.25rem',
+						height: '60vh',
+						width: '39vh',
 						borderRadius: '16px',
 						border: '1px solid',
 						borderColor: 'white',
@@ -194,8 +191,8 @@ function Home() {
 					<Box
 						sx={{
 							bgcolor: '#2E3837',
-							height: '31.8rem',
-							width: '24.2rem',
+							height: '52.7vh',
+							width: '39vh',
 							borderBottomLeftRadius: '15px',
 							borderBottomRightRadius: '15px',
 							borderColor: 'white',
@@ -283,7 +280,7 @@ function Home() {
 				<Box
 					sx={{
 						bgcolor: '#2E3837',
-						height: '52.5vh',
+						height: '52.7vh',
 						width: '40vh',
 						borderRadius: '16px',
 						borderTopLeftRadius: '0',
@@ -295,17 +292,7 @@ function Home() {
 						overflowY: 'scroll',
 					}}
 				>
-					{orders.map((item, index) => {
-						return (
-							<ListButton>
-								{
-									'Recipe: '+item.recipe+'\n'+
-									'Store: ' +item.store +'\n'+
-									'Cost: '  +item.cost
-								}
-							</ListButton>
-						);
-					})}
+					{generateOrder()}
 				</Box>
 			</Box>
 			<div className='alert-body'>
