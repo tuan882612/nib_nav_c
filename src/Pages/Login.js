@@ -4,8 +4,6 @@ import {
 	FormControl,
 	IconButton,
 	Button,
-	Fade,
-	Alert,
 	Typography,
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
@@ -33,22 +31,33 @@ const StyledButton = styled(Button)(() => ({
 
 function LoginPage() {
 	const navigate = useNavigate();
-	const [key, setKey] = useState(0);
+
 	const [values, setValues] = useState({
 		email: '',
 		password: '',
 		showPassword: false,
 	});
+
 	const [error, setError] = useState({
 		email: '',
 		password: '',
+		invalid:''
 	});
+
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    };
 
 	const handleChange = (prop) => (event) => {
 		const value = event.target.value;
 
 		setValues({ ...values, [prop]: value });
 
+		setError({...error, invalid:''})
 		setError((prev) => {
 			const stateObj = { ...prev, [prop]: '' };
 
@@ -56,6 +65,9 @@ function LoginPage() {
 				case 'email':
 					if (!value) {
 						stateObj[prop] = 'Please enter Email.';
+					}
+					if (!validateEmail(value)) {
+                        stateObj[prop] = "Please enter valid Email.";
 					}
 					break;
 				case 'password':
@@ -84,30 +96,38 @@ function LoginPage() {
 	const { handleSubmit } = useForm();
 
 	const handleCred = () => {
-		const body = {
-			email: values.email,
-			password: values.password,
-		};
+		if (!values.email && !values.password) {
+			setError({...error, invalid:'The username or(and) password are empty.'})
+		} else {
+			const body = {
+				email: values.email,
+				password: values.password,type:'login'
+			};
 
-		if (validateError()) {
-			axios.post('http://localhost:8080/login/', body)
-				.then((response) => {
-					if (response.status === 200) {
-						sessionStorage.setItem('id', values.email);
-						sessionStorage.setItem('login', 'true');
-						console.log('Valid login');
-						navigate('/home', {
-							state: { 
-								message: 'Login Successful',
-								type:"success" 
-							},
-						});
-					} else {
-						console.log('Invalid input');
-						navigate('/login');
-					}
+			axios.get('http://localhost:8080/user/get/'+values.email)
+				.then()
+				.catch(() => { 
+					setError({
+						...error, 
+						email:"Email does not exist please register."
+					})
 				});
+
+			if (validateError()) {
+				axios.post('http://localhost:8080/login/', body)
+					.then((response) => {
+						if (response.status === 200) {
+							console.log('Valid login');
+							navigate('/auth', {state:body});
+						} else {
+							setError({...error, invalid:'Invalid user credientials.'})
+							console.log('Invalid input');
+						}
+					});
+			}
 		}
+
+		
 	};
 
 	return (
@@ -210,6 +230,13 @@ function LoginPage() {
 						</StyledButton>
 					</StyledBox>
 				</form>
+				<Typography
+					align="center"
+					color='#e64646'
+					sx={{mt:'2vh'}}
+				>
+					{error.invalid}
+				</Typography>
 			</Box>
 		</Box>
 	);
