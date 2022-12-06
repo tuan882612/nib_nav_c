@@ -14,6 +14,8 @@ import { Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { FormHelperText } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+const baseUrl = 'http://localhost:8080/user/'
+
 const StyledInput = styled(OutlinedInput)(() => ({
 	input: { color: 'black' },
 	backgroundColor: 'white',
@@ -39,13 +41,13 @@ export default function EditProfile() {
 		name: '',
 		email: '',
 		password: '',
-		showPassword: false,
 	});
 
 	const [error, setError] = useState({
 		name: '',
 		email: '',
 		password: '',
+		empty: ''
 	});
 
 	const prevBody = {
@@ -75,47 +77,83 @@ export default function EditProfile() {
 	const handleEdit = (prop) => (event) => {
 		const value = event.target.value;
 		setValues({ ...values, [prop]: value });
+		setError({...error, empty:''})
 		setError((prev) => {
-			const stateObj = { ...prev, [prop]: '' };
+			const stateObj = { ...prev, [prop]: ''};
 
 			switch (prop) {
 				case 'email':
 					if (!value) {
-						stateObj[prop] = 'Please enter Email.';
-					} else if (!value === prevBody.email) {
+						stateObj[prop] = '';
+						break;
+					}
+					if (value === prevBody.email) {
 						stateObj[prop] = 'Duplicate Email.';
 					} else if (!validateEmail(value)) {
                         stateObj[prop] = "Please enter valid Email.";
                     } else {
-						axios.get('http://localhost:8080/user/get/'+value)
+						axios.get(baseUrl+'get/'+value)
 							.then(() => setError({...error, email:'Email already exist.'}))
 					}
 					break;
 				case 'name':
 					if (!value) {
-						stateObj[prop] = 'Please enter Name.';
-					} else if (!value === prevBody.name) {
+						stateObj[prop] = '';
+						break;
+					}
+					if (value === prevBody.name) {
 						stateObj[prop] = 'Duplicate Name.';
 					}
 					break;
 				case 'password':
 					if (!value) {
-						stateObj[prop] = 'Please enter Password.';
-					} else if (!value === prevBody.password) {
-						stateObj[prop] = 'Duplicate Password.';
+						stateObj[prop] = '';
+						break;
 					}
+					if (value === prevBody.password) {
+						stateObj[prop] = 'Duplicate Password.';
+					} else if (value.length < 8) {
+                        stateObj[prop] = "Please enter Password with a minimum length 8.";
+                    }
 					break;
 				default:
 					break;
 			}
-
+			
 			return stateObj;
 		});
 	};
 
-	const buildTextFields = () => {		
-		if (validateError()) {
-			console.log(values)
+	const buildTextFields = () => {
+		if (!values.email && !values.name && !values.password) {
+			setError({...error, empty:'There were no changes made.'})
+		} else {
+			if (validateError()) {
+				axios(baseUrl+'get/'+prevBody.email)
+					.then(response => {
+						var body = response.data
+						
+						if (values.email) {
+							body.email = values.email
+						}
+						if (values.name) {
+							body.name = values.name
+						}
+						if (values.password) {
+							body.password = values.password
+						}
+
+						navigate('/auth', {
+							state:{
+								email:prevBody.email,
+								name:prevBody.name,
+								password:prevBody.password,
+								prev:body,
+								type:"edit"
+							}
+						})
+					})
+			}
 		}
 	};
 
@@ -182,7 +220,14 @@ export default function EditProfile() {
 							Cancel
 						</StyledButton>
 					</Box>
+					
 				</form>
+				<Typography
+					align="center"
+					color='#e64646'
+				>
+					{error.empty}
+				</Typography>
 			</Box>
 		</div>
 	);
