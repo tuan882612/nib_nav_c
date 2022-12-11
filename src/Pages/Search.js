@@ -270,16 +270,12 @@ function Search() {
 				setPrices(arr);
 			});
 
-			axios
-				.get(
-					'http://localhost:8080/user/get/' +
-						sessionStorage.getItem('id')
-				)
+			axios.get('http://localhost:8080/user/get/' + sessionStorage.getItem('id'))
 				.then((response) => {
 					response.data.order.push({
 						recipe: selectedRecipe.title,
 						store: selectedStore.name,
-						cost: cost.toFixed(2).toString(),
+						cost: cost.toString(),
 					});
 					axios.put(
 						'http://localhost:8080/user/update/order',

@@ -125,10 +125,11 @@ function Register() {
             name: values.name,
 			email: values.email,
 			password: values.password,
+			type:'register'
 		};
 
         if (validateError()) {
-            navigate('/auth',{state:body})
+            navigate('/auth', {state:body})
         }
 	}
 
@@ -149,7 +150,7 @@ function Register() {
 				</Typography>
 				<form>
 					<Box>
-						<p className='test-header'>EMAIL</p>
+						<p className='regEmail'>EMAIL</p>
 						<FormControl
 							className='input'
 							sx={{ width: '25ch' }}
@@ -183,7 +184,7 @@ function Register() {
                     <span className='err'>{error.name}</span>
 
 					<Box>
-                        <p className='loginPassword'>PASSWORD</p>
+                        <p className='regPassword'>PASSWORD</p>
 						<FormControl
 							className='input'
 							sx={{ width: '25ch' }}
@@ -210,7 +211,7 @@ function Register() {
                     <span className='err'>{error.password}</span>
 
 					<Box>
-                        <p className='loginPassword'>CONFIRM PASSWORD</p>
+                        <p className='regPassword'>CONFIRM PASSWORD</p>
 						<FormControl
 							className='input'
 							sx={{ width: '25ch' }}
